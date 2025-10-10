@@ -147,7 +147,7 @@ function DeviceSettings({ device, onUpdate }) {
 
 ## 🔧 Available Hooks and Operations
 
-### Hooks
+### Hook
 
 - `useCurrentAppUser()` - Gets current user's profile
 - `useUserDevices()` - Gets all devices for current user with real-time updates
