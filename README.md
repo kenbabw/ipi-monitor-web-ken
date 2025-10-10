@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Untitled UI starter kit for Vite
 
 This is an official Untitled UI starter kit for Vite. Kickstart your Untitled UI project with Vite in seconds.
@@ -54,3 +55,7 @@ Untitled UI React open-source components are licensed under the MIT license, whi
 [Untitled UI license agreement →](https://www.untitledui.com/license)
 
 [Frequently asked questions →](https://www.untitledui.com/faqs)
+=======
+# ipi-monitor-web-ken
+IPI Monitor website in Kens Repo
+>>>>>>> 8ad75399418af33e15e840063e84f2f33a736182
