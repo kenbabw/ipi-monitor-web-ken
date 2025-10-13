@@ -37,7 +37,7 @@ export function NotFound() {
                     </button>
                 </div>
 
-                <div className="relative flex w-[109px] shrink-0 flex-col content-stretch items-start gap-[16px] text-[12px] leading-[normal] font-medium text-[#1c78bf] not-italic">
+                <div className="relative flex w-[109px] shrink-0 flex-col content-stretch items-start gap-[16px] text-[16px] leading-[normal] font-medium text-[#1c78bf] not-italic">
                     <button onClick={handleGoBack} className="relative w-full shrink-0 cursor-pointer text-left hover:underline">
                         Go back
                     </button>

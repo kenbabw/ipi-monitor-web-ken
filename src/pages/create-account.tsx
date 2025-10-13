@@ -114,16 +114,16 @@ export function CreateAccount() {
 
     return (
         <div className="relative min-h-screen border border-solid border-black bg-white" data-name="CreateAccount">
-            <div className="relative box-border flex min-h-screen flex-col content-stretch items-center gap-8 px-[20px] py-[15px] md:gap-[151px]">
-                <Header className="relative box-border flex w-full shrink-0 flex-col content-stretch items-start justify-between bg-white px-[8px] py-[24px]" />
+            <div className="relative box-border flex min-h-screen flex-col content-stretch items-center gap-1 px-[20px] py-[4px] md:gap-2">
+                <Header className="relative box-border flex w-full shrink-0 flex-col content-stretch items-start justify-between bg-white px-[8px] py-[8px]" />
 
                 {/* Main Content */}
-                <div className="flex flex-1 flex-col items-center justify-center gap-8 px-4 py-8">
+                <div className="flex flex-1 flex-col items-center justify-center gap-2 px-2 py-2">
                     {/* Title */}
                     <h1 className="text-[32px] leading-[normal] font-bold text-[#1c78bf] not-italic">Create your Account</h1>
 
                     {/* Create Account Form */}
-                    <form onSubmit={handleSubmit} className="flex w-full max-w-lg flex-col gap-6">
+                    <form onSubmit={handleSubmit} className="flex w-full max-w-lg flex-col gap-3">
                         {/* Error Message */}
                         {error && <div className="rounded border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div>}
 
@@ -161,7 +161,7 @@ export function CreateAccount() {
                         />
 
                         {/* Password Field */}
-                        <div className="flex flex-col gap-2">
+                        <div className="flex flex-col gap-1">
                             <Input
                                 type="password"
                                 label="Password:"
@@ -208,7 +208,7 @@ export function CreateAccount() {
                             <button
                                 type="button"
                                 onClick={handleAlreadyHaveAccount}
-                                className="text-[12px] leading-[normal] font-medium text-[#1c78bf] not-italic hover:underline"
+                                className="text-[16px] leading-[normal] font-medium text-[#1c78bf] not-italic hover:underline"
                             >
                                 I already have an account
                             </button>
@@ -216,7 +216,7 @@ export function CreateAccount() {
                     </form>
                 </div>
 
-                <Footer className="relative box-border flex w-full shrink-0 flex-col content-stretch items-start justify-between px-[8px] py-[24px]" />
+                <Footer className="relative box-border flex w-full shrink-0 flex-col content-stretch items-start justify-between px-[8px] py-[6px]" />
             </div>
         </div>
     );

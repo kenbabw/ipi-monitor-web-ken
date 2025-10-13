@@ -19,7 +19,7 @@ export function HomeLoginPage() {
     // Redirect if user is already logged in
     useEffect(() => {
         if (user) {
-            const from = location.state?.from?.pathname || "/dashboard";
+            const from = location.state?.from?.pathname || "/device-information";
             navigate(from, { replace: true });
         }
     }, [user, navigate, location]);
@@ -71,11 +71,11 @@ export function HomeLoginPage() {
 
     return (
         <div className="relative min-h-screen border border-solid border-black bg-white" data-name="Login">
-            <div className="relative box-border flex min-h-screen flex-col content-stretch items-center gap-8 px-[20px] py-[15px] md:gap-[151px]">
+            <div className="relative box-border flex min-h-screen flex-col content-stretch items-center gap-4 px-[20px] py-[15px] md:gap-8">
                 <Header className="relative box-border flex w-full shrink-0 flex-col content-stretch items-start justify-between bg-white px-[8px] py-[24px]" />
 
                 {/* Main Content */}
-                <div className="flex flex-1 flex-col items-center justify-center gap-[88px] px-4 py-8">
+                <div className="flex flex-1 flex-col items-center justify-center gap-[40px] px-4 py-8">
                     {/* Welcome Title */}
                     <h1 className="text-[32px] leading-[normal] font-bold whitespace-pre text-[#1c78bf] not-italic" data-node-id="24:15">
                         Welcome to IPI Monitor!

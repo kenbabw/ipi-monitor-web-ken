@@ -4,7 +4,8 @@ import { BrowserRouter, Route, Routes } from "react-router";
 import { ProtectedRoute } from "@/components/auth/protected-route";
 import { CreateAccount } from "@/pages/create-account";
 import { Dashboard } from "@/pages/dashboard";
-//import { HomeScreen } from "@/pages/home-screen-OLD";
+import { DeviceInformation } from "@/pages/device-information";
+import Chart from "@/pages/chart";
 import { HomeLoginPage } from "@/pages/home-login-page";
 import { NotFound } from "@/pages/not-found";
 import { RouteProvider } from "@/providers/router-provider";
@@ -27,6 +28,22 @@ createRoot(document.getElementById("root")!).render(
                                 element={
                                     <ProtectedRoute>
                                         <Dashboard />
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/device-information"
+                                element={
+                                    <ProtectedRoute>
+                                        <DeviceInformation />
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/chart"
+                                element={
+                                    <ProtectedRoute>
+                                        <Chart />
                                     </ProtectedRoute>
                                 }
                             />
