@@ -30,7 +30,7 @@ export function Dashboard() {
                         >
                             Device Info
                         </Button>
-                        <Button 
+                        <Button
                             onClick={() => navigate("/chart")}
                             className="rounded-[8px] border border-[#d5d7da] bg-white px-[14px] py-[10px] text-[14px] font-semibold text-[#414651] transition-colors duration-200 hover:border-[#1c78bf] hover:bg-blue-50 hover:text-[#1c78bf]"
                         >
