@@ -5,7 +5,6 @@ import { ProtectedRoute } from "@/components/auth/protected-route";
 import { ChangePassword } from "@/pages/change-password";
 import Chart from "@/pages/chart";
 import { CreateAccount } from "@/pages/create-account";
-// import { Dashboard } from "@/pages/dashboard";
 import { DeviceInformation } from "@/pages/device-information";
 import { HomeLoginPage } from "@/pages/home-login-page";
 import { Logout } from "@/pages/logout";

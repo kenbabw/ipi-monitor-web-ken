@@ -39,6 +39,20 @@ interface DewPointStats {
     low: number;
 }
 
+// Helper function to calculate Y-axis domain with 5 unit padding and round to nearest multiple of 5
+const calculateYAxisDomain = (low: number, high: number): [number, number] => {
+    const paddedLow = low - 5;
+    const paddedHigh = high + 5;
+
+    // Round down to nearest multiple of 5 for min
+    const roundedMin = Math.floor(paddedLow / 5) * 5;
+
+    // Round up to nearest multiple of 5 for max
+    const roundedMax = Math.ceil(paddedHigh / 5) * 5;
+
+    return [roundedMin, roundedMax];
+};
+
 const Chart = () => {
     const navigate = useNavigate();
     const { user, signOut } = useSupabase();
@@ -306,7 +320,7 @@ const Chart = () => {
                                     onChange={(checked) => handleIndividualCheck("temperature", checked)}
                                     isDisabled={!canSelectCharts}
                                 />
-                                <span className={`text-sm font-bold ${!canSelectCharts ? "opacity-50" : ""}`} style={{ color: "#1c78bf" }}>
+                                <span className={`text-sm font-bold ${!canSelectCharts ? "opacity-50" : ""}`} style={{ color: "#ef4444" }}>
                                     Temperature
                                 </span>
                             </div>
@@ -316,7 +330,7 @@ const Chart = () => {
                                     onChange={(checked) => handleIndividualCheck("humidity", checked)}
                                     isDisabled={!canSelectCharts}
                                 />
-                                <span className={`text-sm font-bold ${!canSelectCharts ? "opacity-50" : ""}`} style={{ color: "#10b981" }}>
+                                <span className={`text-sm font-bold ${!canSelectCharts ? "opacity-50" : ""}`} style={{ color: "#1c78bf" }}>
                                     Humidity
                                 </span>
                             </div>
@@ -371,7 +385,11 @@ const Chart = () => {
                                                 <LineChart data={chartData}>
                                                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                                                     <XAxis dataKey="time" stroke="#6b7280" fontSize={12} />
-                                                    <YAxis stroke="#6b7280" fontSize={12} domain={[temperatureStats.low - 5, temperatureStats.high + 5]} />
+                                                    <YAxis
+                                                        stroke="#6b7280"
+                                                        fontSize={12}
+                                                        domain={calculateYAxisDomain(temperatureStats.low, temperatureStats.high)}
+                                                    />
                                                     <Tooltip
                                                         formatter={formatTooltipValue}
                                                         contentStyle={{
@@ -386,10 +404,10 @@ const Chart = () => {
                                                     <Line
                                                         type="monotone"
                                                         dataKey="temperature"
-                                                        stroke="#1c78bf"
+                                                        stroke="#ef4444"
                                                         strokeWidth={2}
                                                         dot={false}
-                                                        activeDot={{ r: 4, stroke: "#1c78bf", strokeWidth: 2, fill: "white" }}
+                                                        activeDot={{ r: 4, stroke: "#ef4444", strokeWidth: 2, fill: "white" }}
                                                     />
 
                                                     {/* Statistical reference lines */}
@@ -459,7 +477,11 @@ const Chart = () => {
                                                 <LineChart data={chartData}>
                                                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                                                     <XAxis dataKey="time" stroke="#6b7280" fontSize={12} />
-                                                    <YAxis stroke="#6b7280" fontSize={12} domain={[humidityStats.low - 5, humidityStats.high + 5]} />
+                                                    <YAxis
+                                                        stroke="#6b7280"
+                                                        fontSize={12}
+                                                        domain={calculateYAxisDomain(humidityStats.low, humidityStats.high)}
+                                                    />
                                                     <Tooltip
                                                         formatter={(value: number, name: string) => [`${value.toFixed(1)}%`, name]}
                                                         contentStyle={{
@@ -474,10 +496,10 @@ const Chart = () => {
                                                     <Line
                                                         type="monotone"
                                                         dataKey="humidity"
-                                                        stroke="#10b981"
+                                                        stroke="#1c78bf"
                                                         strokeWidth={2}
                                                         dot={false}
-                                                        activeDot={{ r: 4, stroke: "#10b981", strokeWidth: 2, fill: "white" }}
+                                                        activeDot={{ r: 4, stroke: "#1c78bf", strokeWidth: 2, fill: "white" }}
                                                     />
 
                                                     {/* Statistical reference lines */}
@@ -547,7 +569,11 @@ const Chart = () => {
                                                 <LineChart data={chartData}>
                                                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                                                     <XAxis dataKey="time" stroke="#6b7280" fontSize={12} />
-                                                    <YAxis stroke="#6b7280" fontSize={12} domain={[dewPointStats.low - 5, dewPointStats.high + 5]} />
+                                                    <YAxis
+                                                        stroke="#6b7280"
+                                                        fontSize={12}
+                                                        domain={calculateYAxisDomain(dewPointStats.low, dewPointStats.high)}
+                                                    />
                                                     <Tooltip
                                                         formatter={(value: number, name: string) => [`${value.toFixed(1)}°`, name]}
                                                         contentStyle={{
