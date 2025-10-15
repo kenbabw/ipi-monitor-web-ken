@@ -10,6 +10,8 @@ interface SupabaseContextType {
     signUp: (email: string, password: string) => Promise<{ error: AuthError | null }>;
     signUpWithProfile: (email: string, password: string, firstName: string, lastName: string) => Promise<{ error: AuthError | null }>;
     signOut: () => Promise<{ error: AuthError | null }>;
+    resetPassword: (email: string) => Promise<{ error: AuthError | null }>;
+    updatePassword: (newPassword: string) => Promise<{ error: AuthError | null }>;
 }
 
 const SupabaseContext = createContext<SupabaseContextType | undefined>(undefined);
@@ -101,6 +103,20 @@ export function SupabaseProvider({ children }: SupabaseProviderProps) {
         return { error };
     };
 
+    const resetPassword = async (email: string) => {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: `${window.location.origin}/change-password`,
+        });
+        return { error };
+    };
+
+    const updatePassword = async (newPassword: string) => {
+        const { error } = await supabase.auth.updateUser({
+            password: newPassword,
+        });
+        return { error };
+    };
+
     const value: SupabaseContextType = {
         user,
         session,
@@ -109,6 +125,8 @@ export function SupabaseProvider({ children }: SupabaseProviderProps) {
         signUp,
         signUpWithProfile,
         signOut,
+        resetPassword,
+        updatePassword,
     };
 
     return <SupabaseContext.Provider value={value}>{children}</SupabaseContext.Provider>;

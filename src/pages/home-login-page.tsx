@@ -48,17 +48,7 @@ export function HomeLoginPage() {
     };
 
     const handleForgotPassword = async () => {
-        if (!email) {
-            setError("Please enter your email first");
-            return;
-        }
-
-        try {
-            // For now, just show a message. You can implement reset password later
-            alert("Password reset functionality will be implemented. Please contact support.");
-        } catch (err) {
-            setError("Failed to send password reset email");
-        }
+        navigate("/reset-password");
     };
 
     if (loading) {
@@ -71,8 +61,8 @@ export function HomeLoginPage() {
 
     return (
         <div className="relative min-h-screen border border-solid border-black bg-white" data-name="Login">
-            <div className="relative box-border flex min-h-screen flex-col content-stretch items-center gap-4 px-[20px] py-[15px] md:gap-8">
-                <Header className="relative box-border flex w-full shrink-0 flex-col content-stretch items-start justify-between bg-white px-[8px] py-[24px]" />
+            <div className="relative box-border flex min-h-screen flex-col content-stretch items-center gap-1 px-[20px] py-[4px] md:gap-2">
+                <Header className="relative box-border flex w-full shrink-0 flex-col content-stretch items-start justify-between bg-white px-[8px] py-[8px]" />
 
                 {/* Main Content */}
                 <div className="flex flex-1 flex-col items-center justify-center gap-[40px] px-4 py-8">
@@ -159,7 +149,7 @@ export function HomeLoginPage() {
                         >
                             {isSignUp ? "Already have an account? Sign in" : "Create an account"}
                         </button>
-                        <button
+                        {/* <button
                             type="button"
                             onClick={() => {
                                 // Handle guest access - you might want to navigate to a limited version
@@ -169,11 +159,11 @@ export function HomeLoginPage() {
                             data-node-id="24:22"
                         >
                             Continue as guest
-                        </button>
+                        </button> */}
                     </div>
                 </div>
 
-                <Footer className="relative box-border flex w-full shrink-0 flex-col content-stretch items-start justify-between px-[8px] py-[24px]" />
+                <Footer className="relative box-border flex w-full shrink-0 flex-col content-stretch items-start justify-between px-[8px] py-[6px]" />
             </div>
         </div>
     );

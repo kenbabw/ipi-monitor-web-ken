@@ -10,15 +10,15 @@ import { Button } from "@/components/base/buttons/button";
 import { Checkbox } from "@/components/base/checkbox/checkbox";
 import { Select } from "@/components/base/select/select";
 import { useUserDevices } from "@/hooks/use-ipi-data";
-import { measurementOperations } from "@/hooks/use-ipi-data";
 import { supabase } from "@/lib/supabase";
-import type { Device, MeasurementData, MeasurementDataInsert } from "@/lib/types/database-ipi.types";
+import type { Device, MeasurementData } from "@/lib/types/database-ipi.types";
+import { useSupabase } from "@/providers/supabase-provider";
 
 interface ChartDataPoint {
     time: string;
     temperature: number;
-    humidity?: number;
-    dewPoint?: number;
+    humidity: number;
+    dewPoint: number;
 }
 
 interface ChartStats {
@@ -27,23 +27,42 @@ interface ChartStats {
     low: number;
 }
 
+interface HumidityStats {
+    average: number;
+    high: number;
+    low: number;
+}
+
+interface DewPointStats {
+    average: number;
+    high: number;
+    low: number;
+}
+
 const Chart = () => {
     const navigate = useNavigate();
+    const { user, signOut } = useSupabase();
     const { devices } = useUserDevices();
     const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
     const [measurements, setMeasurements] = useState<MeasurementData[]>([]);
     const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
-    const [stats, setStats] = useState<ChartStats>({ average: 0, high: 0, low: 0 });
+    const [temperatureStats, setTemperatureStats] = useState<ChartStats>({ average: 0, high: 0, low: 0 });
+    const [humidityStats, setHumidityStats] = useState<HumidityStats>({ average: 0, high: 0, low: 0 });
+    const [dewPointStats, setDewPointStats] = useState<DewPointStats>({ average: 0, high: 0, low: 0 });
     const [loading, setLoading] = useState(false);
+    const [userName, setUserName] = useState<string>("");
 
     // Chart display options
-    const [showTemperature, setShowTemperature] = useState(true);
+    const [showTemperature, setShowTemperature] = useState(false);
     const [showHumidity, setShowHumidity] = useState(false);
     const [showDewPoint, setShowDewPoint] = useState(false);
     const [showAll, setShowAll] = useState(false);
 
     // Date range for filtering
     const [dateRange, setDateRange] = useState<RangeValue<DateValue> | null>(null);
+
+    // Check if both device and date range are selected to enable checkboxes
+    const canSelectCharts = selectedDevice !== null && dateRange !== null;
 
     // Synchronize "All" checkbox with individual checkboxes
     useEffect(() => {
@@ -62,6 +81,27 @@ const Chart = () => {
         }
     }, [devices]);
 
+    // Fetch user data for welcome message
+    const fetchUserData = useCallback(async () => {
+        if (!user) return;
+
+        try {
+            const { data: userData, error: userError } = await supabase.from("app_user").select("user_first_name").eq("auth_user", user.id).single();
+
+            if (userError) throw userError;
+
+            setUserName((userData as any)?.user_first_name || user.email || "User");
+        } catch (err) {
+            console.error("Error fetching user data:", err);
+            setUserName(user.email || "User");
+        }
+    }, [user]);
+
+    // Initialize user data on component mount
+    useEffect(() => {
+        fetchUserData();
+    }, [fetchUserData]);
+
     // Handle device selection
     const handleDeviceSelect = (deviceId: string) => {
         const device = devices.find((d) => d.device_id === deviceId);
@@ -77,7 +117,7 @@ const Chart = () => {
         try {
             let query = supabase
                 .from("measurement_data")
-                .select("*")
+                .select("measurement_date_time, measurement_temperature, measurement_humidity, measurement_dew_point")
                 .eq("device_id", selectedDevice.device_id)
                 .order("measurement_date_time", { ascending: true });
 
@@ -110,7 +150,9 @@ const Chart = () => {
     useEffect(() => {
         if (!measurements.length) {
             setChartData([]);
-            setStats({ average: 0, high: 0, low: 0 });
+            setTemperatureStats({ average: 0, high: 0, low: 0 });
+            setHumidityStats({ average: 0, high: 0, low: 0 });
+            setDewPointStats({ average: 0, high: 0, low: 0 });
             return;
         }
 
@@ -122,19 +164,30 @@ const Chart = () => {
                 day: "numeric",
             }),
             temperature: measurement.measurement_temperature,
-            // Add humidity and dew point when available in the data
-            humidity: undefined, // These would come from additional columns if available
-            dewPoint: undefined,
+            humidity: measurement.measurement_humidity || 0,
+            dewPoint: measurement.measurement_dew_point || 0,
         }));
 
         // Calculate statistics
         const temperatures = measurements.map((m) => m.measurement_temperature);
-        const average = temperatures.reduce((sum, temp) => sum + temp, 0) / temperatures.length;
-        const high = Math.max(...temperatures);
-        const low = Math.min(...temperatures);
+        const tempAverage = temperatures.reduce((sum, temp) => sum + temp, 0) / temperatures.length;
+        const tempHigh = Math.max(...temperatures);
+        const tempLow = Math.min(...temperatures);
+
+        const humidities = measurements.map((m) => m.measurement_humidity || 0).filter((h) => h > 0);
+        const humidityAverage = humidities.length > 0 ? humidities.reduce((sum, hum) => sum + hum, 0) / humidities.length : 0;
+        const humidityHigh = humidities.length > 0 ? Math.max(...humidities) : 0;
+        const humidityLow = humidities.length > 0 ? Math.min(...humidities) : 0;
+
+        const dewPoints = measurements.map((m) => m.measurement_dew_point || 0).filter((d) => d !== 0);
+        const dewPointAverage = dewPoints.length > 0 ? dewPoints.reduce((sum, dew) => sum + dew, 0) / dewPoints.length : 0;
+        const dewPointHigh = dewPoints.length > 0 ? Math.max(...dewPoints) : 0;
+        const dewPointLow = dewPoints.length > 0 ? Math.min(...dewPoints) : 0;
 
         setChartData(processedData);
-        setStats({ average, high, low });
+        setTemperatureStats({ average: tempAverage, high: tempHigh, low: tempLow });
+        setHumidityStats({ average: humidityAverage, high: humidityHigh, low: humidityLow });
+        setDewPointStats({ average: dewPointAverage, high: dewPointHigh, low: dewPointLow });
     }, [measurements]);
 
     // Load data on component mount and when device changes
@@ -169,7 +222,12 @@ const Chart = () => {
 
     const handleLogout = () => {
         localStorage.removeItem("selectedDeviceId");
-        navigate("/");
+        // Navigate immediately and let the logout page handle the signOut
+        navigate("/logout", { replace: true });
+        // Call signOut asynchronously without waiting
+        signOut().catch((err) => {
+            console.error("Error during logout:", err);
+        });
     };
 
     // Handle date range application
@@ -177,227 +235,386 @@ const Chart = () => {
         loadMeasurements();
     };
 
-    // Generate sample measurement data for testing
-    const generateSampleData = async () => {
-        if (!selectedDevice) {
-            alert("Please select a device first from Device Information page");
-            return;
-        }
-
-        setLoading(true);
-        try {
-            const sampleMeasurements: MeasurementDataInsert[] = [];
-            const now = new Date();
-
-            // Generate 50 temperature readings over the last 24 hours
-            for (let i = 0; i < 50; i++) {
-                const timeOffset = ((24 * 60 * 60 * 1000) / 50) * i; // Spread over 24 hours
-                const measurementTime = new Date(now.getTime() - timeOffset);
-
-                // Generate realistic temperature data (15-30°C with some variation)
-                const baseTemp = 22; // Base temperature
-                const variation = Math.sin(i * 0.1) * 5; // Sine wave variation
-                const noise = (Math.random() - 0.5) * 2; // Random noise
-                const temperature = Math.round((baseTemp + variation + noise) * 10) / 10;
-
-                sampleMeasurements.push({
-                    device_id: selectedDevice.device_id,
-                    user_id: 1, // Default user ID - in real app this would come from current user
-                    measurement_date_time: measurementTime.toISOString(),
-                    measurement_temperature: temperature,
-                    measurement_humidity: 45 + Math.random() * 10, // Random humidity 45-55%
-                    measurement_dew_point: temperature - 5 + Math.random() * 3, // Reasonable dew point
-                    device_temperature_unit: "C",
-                });
-            }
-
-            const { error } = await measurementOperations.addMeasurements(sampleMeasurements);
-
-            if (error) {
-                console.error("Error adding sample measurements:", error);
-                alert("Failed to generate sample data");
-            } else {
-                alert("Sample data generated successfully!");
-                loadMeasurements(); // Reload the chart
-            }
-        } catch (error) {
-            console.error("Error generating sample data:", error);
-            alert("Failed to generate sample data");
-        } finally {
-            setLoading(false);
-        }
-    };
-
     const formatTooltipValue = (value: number, name: string) => {
         return [`${value.toFixed(1)}°`, name];
     };
 
     return (
-        <div className="flex min-h-screen flex-col bg-white">
-            <Header />
+        <div className="relative min-h-screen border border-solid border-black bg-white" data-name="Charts">
+            <div className="relative box-border flex min-h-screen flex-col content-stretch items-center gap-1 px-[20px] py-[4px] md:gap-2">
+                <Header className="relative box-border flex w-full shrink-0 flex-col content-stretch items-start justify-between bg-white px-[8px] py-[8px]" />
 
-            <div className="flex-1 px-8 pt-8 pb-12">
-                {/* Page header section */}
-                <div className="mx-auto max-w-7xl">
-                    <div className="mb-6">
-                        {/* Welcome and action buttons */}
-                        <div className="mb-5 flex items-center justify-between">
-                            <div className="flex-1">
-                                <h1 className="text-xl font-semibold text-gray-900">Welcome back, Olivia</h1>
+                {/* Main Content */}
+                <div className="flex w-full flex-1 flex-col px-8 py-8">
+                    {/* Page header section */}
+                    <div className="w-full">
+                        <div className="mb-6">
+                            {/* Welcome and action buttons */}
+                            <div className="mb-5 flex items-center justify-between">
+                                <div className="flex flex-col items-start">
+                                    <p className="text-[20px] leading-[30px] font-semibold text-[#181d27]">Welcome back, {userName}</p>
+                                </div>
+                                <div className="flex items-center gap-3">
+                                    <Button color="secondary" onClick={() => navigate("/device-information")} className="px-4 py-2 text-sm font-semibold">
+                                        Device Info
+                                    </Button>
+                                    <Button color="secondary" className="px-4 py-2 text-sm font-semibold">
+                                        Charts
+                                    </Button>
+                                    <Button color="secondary" onClick={handleLogout} className="px-4 py-2 text-sm font-semibold">
+                                        Logout
+                                    </Button>
+                                </div>
                             </div>
-                            <div className="flex items-center gap-3">
-                                <Button color="secondary" onClick={() => navigate("/device-information")} className="px-4 py-2 text-sm font-semibold">
-                                    Device Info
-                                </Button>
-                                <Button color="secondary" className="px-4 py-2 text-sm font-semibold">
-                                    Graphs
-                                </Button>
-                                <Button color="secondary" onClick={handleLogout} className="px-4 py-2 text-sm font-semibold">
-                                    Logout
-                                </Button>
+
+                            {/* Device Selection */}
+                            <div className="flex flex-col items-start gap-2">
+                                <Select
+                                    label="Device:"
+                                    placeholder="Select Device"
+                                    selectedKey={selectedDevice?.device_id || null}
+                                    onSelectionChange={(key) => handleDeviceSelect(key as string)}
+                                    className="w-full max-w-[300px]"
+                                    items={devices.map((device) => ({
+                                        id: device.device_id,
+                                        label: device.user_device_name || device.device_name,
+                                    }))}
+                                >
+                                    {(item) => (
+                                        <Select.Item key={item.id} id={item.id}>
+                                            {item.label}
+                                        </Select.Item>
+                                    )}
+                                </Select>
                             </div>
                         </div>
 
-                        {/* Device Selection */}
-                        <div className="flex flex-col items-start gap-2">
-                            <Select
-                                label="Device:"
-                                placeholder="Select Device"
-                                selectedKey={selectedDevice?.device_id || null}
-                                onSelectionChange={(key) => handleDeviceSelect(key as string)}
-                                className="w-full max-w-[800px]"
-                                items={devices.map((device) => ({
-                                    id: device.device_id,
-                                    label: device.user_device_name || device.device_name,
-                                }))}
-                            >
-                                {(item) => (
-                                    <Select.Item key={item.id} id={item.id}>
-                                        {item.label}
-                                    </Select.Item>
-                                )}
-                            </Select>
-                        </div>
-                    </div>
-
-                    {/* Date picker and action buttons */}
-                    <div className="mb-6 flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                            {/* Date Range Picker */}
-                            <DateRangePicker value={dateRange} onChange={setDateRange} onApply={handleDateRangeApply} />
-                        </div>
-                        <div className="flex gap-2">
-                            <Button color="secondary" onClick={loadMeasurements} className="px-4 py-2 text-sm font-semibold">
-                                Refresh Data
-                            </Button>
-                            <Button color="primary" onClick={generateSampleData} className="px-4 py-2 text-sm font-semibold" disabled={loading}>
-                                Generate Sample Data
-                            </Button>
-                        </div>
-                    </div>
-
-                    {/* Graph Type Selections */}
-                    <div className="mb-6 flex items-center gap-8">
-                        <div className="flex items-center gap-2">
-                            <Checkbox isSelected={showTemperature} onChange={(checked) => handleIndividualCheck("temperature", checked)} />
-                            <span className="text-sm font-bold text-brand-600">Temperature</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <Checkbox isSelected={showHumidity} onChange={(checked) => handleIndividualCheck("humidity", checked)} />
-                            <span className="text-sm font-bold text-brand-600">Humidity</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <Checkbox isSelected={showDewPoint} onChange={(checked) => handleIndividualCheck("dewPoint", checked)} />
-                            <span className="text-sm font-bold text-brand-600">Dew Point</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <Checkbox isSelected={showAll} onChange={handleShowAll} />
-                            <span className="text-sm font-bold text-brand-600">All</span>
-                        </div>
-                    </div>
-
-                    {/* Chart Section */}
-                    <div className="rounded-xl border border-gray-200 bg-gray-50 p-5">
-                        <div className="mb-4">
-                            <h2 className="text-sm font-semibold text-gray-900">
-                                Temperature{selectedDevice ? ` - ${selectedDevice.user_device_name || selectedDevice.device_name}` : ""}
-                            </h2>
+                        {/* Date picker */}
+                        <div className="mb-6 flex items-center justify-start">
+                            <div className="flex items-center gap-4">
+                                {/* Date Range Picker */}
+                                <DateRangePicker value={dateRange} onChange={setDateRange} onApply={handleDateRangeApply} isDisabled={!selectedDevice} />
+                                {!selectedDevice && <span className="text-sm text-gray-500 italic">Select a device to enable date filtering</span>}
+                            </div>
                         </div>
 
-                        <div className="rounded-xl border border-gray-200 bg-white p-5">
-                            {loading ? (
-                                <div className="flex h-64 items-center justify-center">
-                                    <div className="text-gray-500">Loading chart data...</div>
+                        {/* Chart Type Selections */}
+                        <div className="mb-6 flex items-center gap-8">
+                            <div className="flex items-center gap-2">
+                                <Checkbox
+                                    isSelected={showTemperature}
+                                    onChange={(checked) => handleIndividualCheck("temperature", checked)}
+                                    isDisabled={!canSelectCharts}
+                                />
+                                <span className={`text-sm font-bold ${!canSelectCharts ? "opacity-50" : ""}`} style={{ color: "#1c78bf" }}>
+                                    Temperature
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Checkbox
+                                    isSelected={showHumidity}
+                                    onChange={(checked) => handleIndividualCheck("humidity", checked)}
+                                    isDisabled={!canSelectCharts}
+                                />
+                                <span className={`text-sm font-bold ${!canSelectCharts ? "opacity-50" : ""}`} style={{ color: "#10b981" }}>
+                                    Humidity
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Checkbox
+                                    isSelected={showDewPoint}
+                                    onChange={(checked) => handleIndividualCheck("dewPoint", checked)}
+                                    isDisabled={!canSelectCharts}
+                                />
+                                <span className={`text-sm font-bold ${!canSelectCharts ? "opacity-50" : ""}`} style={{ color: "#f59e0b" }}>
+                                    Dew Point
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Checkbox isSelected={showAll} onChange={handleShowAll} isDisabled={!canSelectCharts} />
+                                <span className={`text-sm font-bold text-brand-600 ${!canSelectCharts ? "opacity-50" : ""}`}>All</span>
+                            </div>
+                        </div>
+
+                        {/* Message when checkboxes are disabled */}
+                        {!canSelectCharts && (
+                            <div className="mb-4 text-sm text-gray-500 italic">
+                                {!selectedDevice && !dateRange
+                                    ? "Select a device and date range to enable chart options"
+                                    : !selectedDevice
+                                      ? "Select a device to enable chart options"
+                                      : "Select a date range to enable chart options"}
+                            </div>
+                        )}
+
+                        {/* Chart Section */}
+                        {showTemperature && (
+                            <div className="rounded-xl border border-gray-200 bg-gray-50 p-5">
+                                <div className="mb-4">
+                                    <h2 className="text-sm font-semibold text-gray-900">
+                                        Temperature{selectedDevice ? ` - ${selectedDevice.user_device_name || selectedDevice.device_name}` : ""}
+                                    </h2>
                                 </div>
-                            ) : chartData.length === 0 ? (
-                                <div className="flex h-64 items-center justify-center">
-                                    <div className="text-gray-500">No data available for the selected time period</div>
-                                </div>
-                            ) : (
-                                <div className="h-64">
-                                    <ResponsiveContainer width="100%" height="100%">
-                                        <LineChart data={chartData}>
-                                            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                                            <XAxis dataKey="time" stroke="#6b7280" fontSize={12} />
-                                            <YAxis stroke="#6b7280" fontSize={12} />
-                                            <Tooltip
-                                                formatter={formatTooltipValue}
-                                                contentStyle={{
-                                                    backgroundColor: "white",
-                                                    border: "1px solid #e5e7eb",
-                                                    borderRadius: "8px",
-                                                    boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-                                                }}
-                                            />
 
-                                            {/* Temperature line */}
-                                            {showTemperature && (
-                                                <Line
-                                                    type="monotone"
-                                                    dataKey="temperature"
-                                                    stroke="#1c78bf"
-                                                    strokeWidth={2}
-                                                    dot={false}
-                                                    activeDot={{ r: 4, stroke: "#1c78bf", strokeWidth: 2, fill: "white" }}
-                                                />
-                                            )}
+                                <div className="rounded-xl border border-gray-200 bg-white p-5">
+                                    {loading ? (
+                                        <div className="flex h-64 items-center justify-center">
+                                            <div className="text-gray-500">Loading chart data...</div>
+                                        </div>
+                                    ) : chartData.length === 0 ? (
+                                        <div className="flex h-64 items-center justify-center">
+                                            <div className="text-gray-500">No Temperature data available for the selected time period</div>
+                                        </div>
+                                    ) : (
+                                        <div className="h-64">
+                                            <ResponsiveContainer width="100%" height="100%">
+                                                <LineChart data={chartData}>
+                                                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                                                    <XAxis dataKey="time" stroke="#6b7280" fontSize={12} />
+                                                    <YAxis stroke="#6b7280" fontSize={12} domain={[temperatureStats.low - 5, temperatureStats.high + 5]} />
+                                                    <Tooltip
+                                                        formatter={formatTooltipValue}
+                                                        contentStyle={{
+                                                            backgroundColor: "white",
+                                                            border: "1px solid #e5e7eb",
+                                                            borderRadius: "8px",
+                                                            boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+                                                        }}
+                                                    />
 
-                                            {/* Statistical reference lines */}
-                                            {showTemperature && stats.average > 0 && (
-                                                <>
-                                                    <ReferenceLine
-                                                        y={stats.average}
-                                                        stroke="#9e77ed"
-                                                        strokeDasharray="5 5"
+                                                    {/* Temperature line */}
+                                                    <Line
+                                                        type="monotone"
+                                                        dataKey="temperature"
+                                                        stroke="#1c78bf"
                                                         strokeWidth={2}
-                                                        label={`Avg: ${stats.average.toFixed(1)}°`}
+                                                        dot={false}
+                                                        activeDot={{ r: 4, stroke: "#1c78bf", strokeWidth: 2, fill: "white" }}
                                                     />
-                                                    <ReferenceLine
-                                                        y={stats.high}
-                                                        stroke="#ef4444"
-                                                        strokeDasharray="5 5"
-                                                        strokeWidth={2}
-                                                        label={`High: ${stats.high.toFixed(1)}°`}
-                                                    />
-                                                    <ReferenceLine
-                                                        y={stats.low}
-                                                        stroke="#22c55e"
-                                                        strokeDasharray="5 5"
-                                                        strokeWidth={2}
-                                                        label={`Low: ${stats.low.toFixed(1)}°`}
-                                                    />
-                                                </>
-                                            )}
-                                        </LineChart>
-                                    </ResponsiveContainer>
+
+                                                    {/* Statistical reference lines */}
+                                                    {temperatureStats.average > 0 && (
+                                                        <>
+                                                            <ReferenceLine
+                                                                y={temperatureStats.average}
+                                                                stroke="#9e77ed"
+                                                                strokeDasharray="5 5"
+                                                                strokeWidth={2}
+                                                                label={{
+                                                                    value: `Avg: ${temperatureStats.average.toFixed(1)}°`,
+                                                                    position: "top",
+                                                                }}
+                                                            />
+                                                            <ReferenceLine
+                                                                y={temperatureStats.high}
+                                                                stroke="#ef4444"
+                                                                strokeDasharray="5 5"
+                                                                strokeWidth={2}
+                                                                label={{
+                                                                    value: `High: ${temperatureStats.high.toFixed(1)}°`,
+                                                                    position: "top",
+                                                                }}
+                                                            />
+                                                            <ReferenceLine
+                                                                y={temperatureStats.low}
+                                                                stroke="#22c55e"
+                                                                strokeDasharray="5 5"
+                                                                strokeWidth={2}
+                                                                label={{
+                                                                    value: `Low: ${temperatureStats.low.toFixed(1)}°`,
+                                                                    position: "top",
+                                                                }}
+                                                            />
+                                                        </>
+                                                    )}
+                                                </LineChart>
+                                            </ResponsiveContainer>
+                                        </div>
+                                    )}
                                 </div>
-                            )}
-                        </div>
+                            </div>
+                        )}
+
+                        {/* Humidity Chart Section */}
+                        {showHumidity && (
+                            <div className="mt-6 rounded-xl border border-gray-200 bg-gray-50 p-5">
+                                <div className="mb-4">
+                                    <h2 className="text-sm font-semibold text-gray-900">
+                                        Humidity{selectedDevice ? ` - ${selectedDevice.user_device_name || selectedDevice.device_name}` : ""}
+                                    </h2>
+                                </div>
+
+                                <div className="rounded-xl border border-gray-200 bg-white p-5">
+                                    {loading ? (
+                                        <div className="flex h-64 items-center justify-center">
+                                            <div className="text-gray-500">Loading humidity data...</div>
+                                        </div>
+                                    ) : chartData.length === 0 ? (
+                                        <div className="flex h-64 items-center justify-center">
+                                            <div className="text-gray-500">No Humidity data available for the selected time period</div>
+                                        </div>
+                                    ) : (
+                                        <div className="h-64">
+                                            <ResponsiveContainer width="100%" height="100%">
+                                                <LineChart data={chartData}>
+                                                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                                                    <XAxis dataKey="time" stroke="#6b7280" fontSize={12} />
+                                                    <YAxis stroke="#6b7280" fontSize={12} domain={[humidityStats.low - 5, humidityStats.high + 5]} />
+                                                    <Tooltip
+                                                        formatter={(value: number, name: string) => [`${value.toFixed(1)}%`, name]}
+                                                        contentStyle={{
+                                                            backgroundColor: "white",
+                                                            border: "1px solid #e5e7eb",
+                                                            borderRadius: "8px",
+                                                            boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+                                                        }}
+                                                    />
+
+                                                    {/* Humidity line */}
+                                                    <Line
+                                                        type="monotone"
+                                                        dataKey="humidity"
+                                                        stroke="#10b981"
+                                                        strokeWidth={2}
+                                                        dot={false}
+                                                        activeDot={{ r: 4, stroke: "#10b981", strokeWidth: 2, fill: "white" }}
+                                                    />
+
+                                                    {/* Statistical reference lines */}
+                                                    {humidityStats.average > 0 && (
+                                                        <>
+                                                            <ReferenceLine
+                                                                y={humidityStats.average}
+                                                                stroke="#9e77ed"
+                                                                strokeDasharray="5 5"
+                                                                strokeWidth={2}
+                                                                label={{
+                                                                    value: `Avg: ${humidityStats.average.toFixed(1)}%`,
+                                                                    position: "top",
+                                                                }}
+                                                            />
+                                                            <ReferenceLine
+                                                                y={humidityStats.high}
+                                                                stroke="#ef4444"
+                                                                strokeDasharray="5 5"
+                                                                strokeWidth={2}
+                                                                label={{
+                                                                    value: `High: ${humidityStats.high.toFixed(1)}%`,
+                                                                    position: "top",
+                                                                }}
+                                                            />
+                                                            <ReferenceLine
+                                                                y={humidityStats.low}
+                                                                stroke="#22c55e"
+                                                                strokeDasharray="5 5"
+                                                                strokeWidth={2}
+                                                                label={{
+                                                                    value: `Low: ${humidityStats.low.toFixed(1)}%`,
+                                                                    position: "top",
+                                                                }}
+                                                            />
+                                                        </>
+                                                    )}
+                                                </LineChart>
+                                            </ResponsiveContainer>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Dew Point Chart Section */}
+                        {showDewPoint && (
+                            <div className="mt-6 rounded-xl border border-gray-200 bg-gray-50 p-5">
+                                <div className="mb-4">
+                                    <h2 className="text-sm font-semibold text-gray-900">
+                                        Dew Point{selectedDevice ? ` - ${selectedDevice.user_device_name || selectedDevice.device_name}` : ""}
+                                    </h2>
+                                </div>
+
+                                <div className="rounded-xl border border-gray-200 bg-white p-5">
+                                    {loading ? (
+                                        <div className="flex h-64 items-center justify-center">
+                                            <div className="text-gray-500">Loading dew point data...</div>
+                                        </div>
+                                    ) : chartData.length === 0 ? (
+                                        <div className="flex h-64 items-center justify-center">
+                                            <div className="text-gray-500">No Dew Point data available for the selected time period</div>
+                                        </div>
+                                    ) : (
+                                        <div className="h-64">
+                                            <ResponsiveContainer width="100%" height="100%">
+                                                <LineChart data={chartData}>
+                                                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                                                    <XAxis dataKey="time" stroke="#6b7280" fontSize={12} />
+                                                    <YAxis stroke="#6b7280" fontSize={12} domain={[dewPointStats.low - 5, dewPointStats.high + 5]} />
+                                                    <Tooltip
+                                                        formatter={(value: number, name: string) => [`${value.toFixed(1)}°`, name]}
+                                                        contentStyle={{
+                                                            backgroundColor: "white",
+                                                            border: "1px solid #e5e7eb",
+                                                            borderRadius: "8px",
+                                                            boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+                                                        }}
+                                                    />
+
+                                                    {/* Dew Point line */}
+                                                    <Line
+                                                        type="monotone"
+                                                        dataKey="dewPoint"
+                                                        stroke="#f59e0b"
+                                                        strokeWidth={2}
+                                                        dot={false}
+                                                        activeDot={{ r: 4, stroke: "#f59e0b", strokeWidth: 2, fill: "white" }}
+                                                    />
+
+                                                    {/* Statistical reference lines */}
+                                                    {dewPointStats.average !== 0 && (
+                                                        <>
+                                                            <ReferenceLine
+                                                                y={dewPointStats.average}
+                                                                stroke="#9e77ed"
+                                                                strokeDasharray="5 5"
+                                                                strokeWidth={2}
+                                                                label={{
+                                                                    value: `Avg: ${dewPointStats.average.toFixed(1)}°`,
+                                                                    position: "top",
+                                                                }}
+                                                            />
+                                                            <ReferenceLine
+                                                                y={dewPointStats.high}
+                                                                stroke="#ef4444"
+                                                                strokeDasharray="5 5"
+                                                                strokeWidth={2}
+                                                                label={{
+                                                                    value: `High: ${dewPointStats.high.toFixed(1)}°`,
+                                                                    position: "top",
+                                                                }}
+                                                            />
+                                                            <ReferenceLine
+                                                                y={dewPointStats.low}
+                                                                stroke="#22c55e"
+                                                                strokeDasharray="5 5"
+                                                                strokeWidth={2}
+                                                                label={{
+                                                                    value: `Low: ${dewPointStats.low.toFixed(1)}°`,
+                                                                    position: "top",
+                                                                }}
+                                                            />
+                                                        </>
+                                                    )}
+                                                </LineChart>
+                                            </ResponsiveContainer>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
-            </div>
 
-            <Footer />
+                <Footer className="relative box-border flex w-full shrink-0 flex-col content-stretch items-start justify-between px-[8px] py-[6px]" />
+            </div>
         </div>
     );
 };

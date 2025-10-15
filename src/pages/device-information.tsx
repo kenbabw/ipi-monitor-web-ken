@@ -77,16 +77,16 @@ export const DeviceInformation = () => {
         fetchDevices();
     }, [user, navigate, fetchUserData, fetchDevices]);
 
-    const handleLogout = async () => {
-        const { error } = await signOut();
-        if (error) {
-            setError(error.message);
-        } else {
-            navigate("/login");
-        }
+    const handleLogout = () => {
+        // Navigate immediately and let the logout page handle the signOut
+        navigate("/logout", { replace: true });
+        // Call signOut asynchronously without waiting
+        signOut().catch((err) => {
+            console.error("Error during logout:", err);
+        });
     };
 
-    const handleGraphs = () => {
+    const handleCharts = () => {
         navigate("/chart");
     };
 
@@ -116,33 +116,24 @@ export const DeviceInformation = () => {
             <div className="relative box-border flex min-h-screen flex-col content-stretch items-center gap-1 px-[20px] py-[4px] md:gap-2">
                 <Header className="relative box-border flex w-full shrink-0 flex-col content-stretch items-start justify-between bg-white px-[8px] py-[8px]" />
 
-                {/* Page Header Section */}
-                <div className="flex w-full max-w-7xl flex-col items-start gap-[8px]">
-                    <div className="box-border flex w-full flex-col items-end gap-[6px] px-[32px] py-0">
-                        <div className="flex w-full flex-col items-start gap-[16px]">
-                            <div className="flex w-full flex-wrap items-start justify-between gap-[16px]">
+                {/* Main Content */}
+                <div className="flex w-full flex-1 flex-col px-8 py-8">
+                    {/* Page header section */}
+                    <div className="w-full">
+                        <div className="mb-6">
+                            {/* Welcome and action buttons */}
+                            <div className="flex w-full flex-wrap items-start justify-between gap-[5px]">
                                 <div className="flex flex-col items-start">
                                     <p className="text-[20px] leading-[30px] font-semibold text-[#181d27]">Welcome back, {userName}</p>
                                 </div>
-                                <div className="flex items-start gap-[12px]">
-                                    <Button
-                                        className="rounded-[8px] border border-[#d5d7da] bg-white px-[14px] py-[10px] text-[14px] font-semibold text-[#414651] transition-colors duration-200 hover:border-[#1c78bf] hover:bg-blue-50 hover:text-[#1c78bf]"
-                                        data-name="Device Info Button"
-                                    >
+                                <div className="flex items-center gap-3">
+                                    <Button color="secondary" className="px-4 py-2 text-sm font-semibold">
                                         Device Info
                                     </Button>
-                                    <Button
-                                        onClick={handleGraphs}
-                                        className="rounded-[8px] border border-[#d5d7da] bg-white px-[14px] py-[10px] text-[14px] font-semibold text-[#414651] transition-colors duration-200 hover:border-[#1c78bf] hover:bg-blue-50 hover:text-[#1c78bf]"
-                                        data-name="Graph/Charts Button"
-                                    >
-                                        Graphs
+                                    <Button color="secondary" onClick={handleCharts} className="px-4 py-2 text-sm font-semibold">
+                                        Charts
                                     </Button>
-                                    <Button
-                                        onClick={handleLogout}
-                                        className="rounded-[8px] border border-[#d5d7da] bg-white px-[14px] py-[10px] text-[14px] font-semibold text-[#414651] transition-colors duration-200 hover:border-[#1c78bf] hover:bg-blue-50 hover:text-[#1c78bf]"
-                                        data-name="Logout Button"
-                                    >
+                                    <Button color="secondary" onClick={handleLogout} className="px-4 py-2 text-sm font-semibold">
                                         Logout
                                     </Button>
                                 </div>
@@ -151,13 +142,13 @@ export const DeviceInformation = () => {
                     </div>
 
                     {/* Device Selection */}
-                    <div className="flex flex-col items-start gap-2">
+                    <div className="flex flex-col items-start gap-1 [&_label]:!text-[#1c78bf]">
                         <Select
                             label="Device:"
                             placeholder="Select Device"
                             selectedKey={selectedDevice?.device_id || null}
                             onSelectionChange={(key) => handleDeviceSelect(key as string)}
-                            className="w-full max-w-[800px]"
+                            className="w-full max-w-[300px]"
                             items={devices.map((device) => ({
                                 id: device.device_id,
                                 label: device.user_device_name || device.device_name,
@@ -177,25 +168,32 @@ export const DeviceInformation = () => {
 
                 {/* Device Information Form */}
                 {selectedDevice ? (
-                    <div className="flex w-full max-w-6xl flex-col items-start gap-[6px]">
+                    <div className="flex w-full max-w-6xl flex-col items-start gap-[1px] [&_label]:!text-[#1c78bf]">
                         <div className="flex w-full gap-[16px]">
-                            {/* Left Column */}
+                            {/* First Column - 4 fields */}
                             <div className="flex flex-1 flex-col items-start gap-2">
                                 <Input
                                     label="Device Name:"
                                     value={selectedDevice.user_device_name || selectedDevice.device_name}
                                     isReadOnly
+                                    isDisabled
                                     className="w-full"
                                 />
 
-                                <Input label="Device ID:" value={selectedDevice.device_id} isReadOnly className="w-full" />
+                                <Input label="Device ID:" value={selectedDevice.device_id} isReadOnly isDisabled className="w-full" />
 
-                                <Input label="Device Interval:" value={`${selectedDevice.device_interval} minutes`} isReadOnly className="w-full" />
+                                <Input label="Device Interval:" value={`${selectedDevice.device_interval} minutes`} isReadOnly isDisabled className="w-full" />
 
+                                <Input label="Device Battery:" value={`${selectedDevice.device_battery}%`} isReadOnly isDisabled className="w-full" />
+                            </div>
+
+                            {/* Second Column - 6 fields */}
+                            <div className="flex flex-1 flex-col items-start gap-2">
                                 <Input
                                     label="Low Temp Threshold:"
                                     value={`${selectedDevice.device_low_temperature_threshhold}°${selectedDevice.device_temperature_unit}`}
                                     isReadOnly
+                                    isDisabled
                                     className="w-full"
                                 />
 
@@ -203,6 +201,7 @@ export const DeviceInformation = () => {
                                     label="High Temp Threshold:"
                                     value={`${selectedDevice.device_high_temperature_threshhold}°${selectedDevice.device_temperature_unit}`}
                                     isReadOnly
+                                    isDisabled
                                     className="w-full"
                                 />
 
@@ -210,6 +209,7 @@ export const DeviceInformation = () => {
                                     label="Low Humidity Threshold:"
                                     value={`${selectedDevice.device_low_humidity_threshhold}%`}
                                     isReadOnly
+                                    isDisabled
                                     className="w-full"
                                 />
 
@@ -217,16 +217,15 @@ export const DeviceInformation = () => {
                                     label="High Humidity Threshold:"
                                     value={`${selectedDevice.device_high_humidity_threshhold}%`}
                                     isReadOnly
+                                    isDisabled
                                     className="w-full"
                                 />
-                            </div>
 
-                            {/* Right Column */}
-                            <div className="flex flex-1 flex-col items-start gap-2">
                                 <Input
                                     label="Low Dew Point Threshold:"
                                     value={`${selectedDevice.device_low_dew_point}°${selectedDevice.device_temperature_unit}`}
                                     isReadOnly
+                                    isDisabled
                                     className="w-full"
                                 />
 
@@ -234,19 +233,34 @@ export const DeviceInformation = () => {
                                     label="High Dew Point Threshold:"
                                     value={`${selectedDevice.device_high_dew_point}°${selectedDevice.device_temperature_unit}`}
                                     isReadOnly
+                                    isDisabled
+                                    className="w-full"
+                                />
+                            </div>
+
+                            {/* Third Column - 3 fields */}
+                            <div className="flex flex-1 flex-col items-start gap-2">
+                                <Input
+                                    label="Temperature Unit:"
+                                    value={selectedDevice.device_temperature_unit === "Celsius" ? "Celsius" : "Fahrenheit"}
+                                    isReadOnly
+                                    isDisabled
                                     className="w-full"
                                 />
 
-                                <Input label="Device Last Polled:" value={formatDate(selectedDevice.device_last_polled)} isReadOnly className="w-full" />
-
-                                <Input label="Device Last Uploaded:" value={formatDate(selectedDevice.device_last_uploaded)} isReadOnly className="w-full" />
-
-                                <Input label="Device Battery:" value={`${selectedDevice.device_battery}%`} isReadOnly className="w-full" />
+                                <Input
+                                    label="Device Last Polled:"
+                                    value={formatDate(selectedDevice.device_last_polled)}
+                                    isReadOnly
+                                    isDisabled
+                                    className="w-full"
+                                />
 
                                 <Input
-                                    label="Set Temperature:"
-                                    value={selectedDevice.device_temperature_unit === "C" ? "Celsius" : "Fahrenheit"}
+                                    label="Device Last Uploaded:"
+                                    value={formatDate(selectedDevice.device_last_uploaded)}
                                     isReadOnly
+                                    isDisabled
                                     className="w-full"
                                 />
                             </div>
