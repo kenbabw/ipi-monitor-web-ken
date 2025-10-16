@@ -22,19 +22,46 @@ export function ChangePassword() {
     useEffect(() => {
         const establishSession = async () => {
             try {
+                console.log('=== Password Reset Debug Info ===');
+                console.log('Full URL:', window.location.href);
                 console.log('URL Hash:', window.location.hash);
+                console.log('URL Search:', window.location.search);
                 
-                // Parse the URL hash for auth tokens
-                const hashParams = new URLSearchParams(window.location.hash.substring(1));
-                const accessToken = hashParams.get('access_token');
-                const refreshToken = hashParams.get('refresh_token');
-                const type = hashParams.get('type');
+                // Try to parse from hash first (most common for Supabase)
+                let hashParams = new URLSearchParams(window.location.hash.substring(1));
+                let accessToken = hashParams.get('access_token');
+                let refreshToken = hashParams.get('refresh_token');
+                let type = hashParams.get('type');
+
+                // If not in hash, try query parameters
+                if (!accessToken) {
+                    console.log('No tokens in hash, checking query parameters...');
+                    const searchParams = new URLSearchParams(window.location.search);
+                    accessToken = searchParams.get('access_token');
+                    refreshToken = searchParams.get('refresh_token');
+                    type = searchParams.get('type');
+                }
 
                 console.log('Token type:', type);
                 console.log('Has access token:', !!accessToken);
+                console.log('Has refresh token:', !!refreshToken);
+                console.log('Access token (first 20 chars):', accessToken?.substring(0, 20));
+
+                // First check if Supabase has already established a session
+                const { data: sessionData } = await supabase.auth.getSession();
+                console.log('Existing session check:', !!sessionData.session);
+
+                if (sessionData.session) {
+                    console.log('Session already exists from Supabase auto-detection');
+                    setHasValidSession(true);
+                    // Clear the hash/query from URL for security
+                    window.history.replaceState(null, '', window.location.pathname);
+                    setIsCheckingSession(false);
+                    return;
+                }
 
                 if (type === 'recovery' && accessToken && refreshToken) {
-                    console.log('Attempting to set session...');
+                    console.log('Attempting to manually set session...');
                     
                     // Manually set the session using the tokens from the URL
                     const { data, error } = await supabase.auth.setSession({
@@ -47,17 +74,21 @@ export function ChangePassword() {
                         setError("Invalid or expired password reset link. Please request a new one.");
                         setHasValidSession(false);
                     } else if (data.session) {
-                        console.log('Session established successfully:', data.session);
+                        console.log('Session established successfully!');
+                        console.log('User:', data.session.user.email);
                         setHasValidSession(true);
-                        // Clear the hash from URL for security
+                        // Clear the hash/query from URL for security
                         window.history.replaceState(null, '', window.location.pathname);
                     } else {
-                        console.error('No session returned');
+                        console.error('No session returned from setSession');
                         setError("Failed to establish session. Please request a new password reset link.");
                         setHasValidSession(false);
                     }
                 } else {
-                    console.log('No recovery tokens found in URL');
+                    console.log('Missing required parameters:');
+                    console.log('- type === "recovery":', type === 'recovery');
+                    console.log('- has accessToken:', !!accessToken);
+                    console.log('- has refreshToken:', !!refreshToken);
                     setError("Invalid password reset link. Please request a new one.");
                     setHasValidSession(false);
                 }
