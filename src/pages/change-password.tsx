@@ -4,10 +4,11 @@ import { Footer } from "@/components/application/footer/footer";
 import { Header } from "@/components/application/header/header";
 import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
+import { supabase } from "@/lib/supabase";
 import { useSupabase } from "@/providers/supabase-provider";
 
 export function ChangePassword() {
-    const { updatePassword, session } = useSupabase();
+    const { updatePassword } = useSupabase();
     const navigate = useNavigate();
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -15,28 +16,62 @@ export function ChangePassword() {
     const [success, setSuccess] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isCheckingSession, setIsCheckingSession] = useState(true);
+    const [hasValidSession, setHasValidSession] = useState(false);
 
-    // Wait for session to be established from URL hash
+    // Handle password reset token from URL and establish session
     useEffect(() => {
-        // Log the current state for debugging
-        console.log('Change Password - Session:', session);
-        console.log('Change Password - URL Hash:', window.location.hash);
-        
-        // Give Supabase time to process the URL hash and establish session
-        const timer = setTimeout(() => {
-            setIsCheckingSession(false);
-            
-            // If still no session after waiting, show error
-            if (!session && window.location.hash.includes('access_token')) {
-                console.log('No session established after waiting');
-                setError("Invalid or expired password reset link. Please request a new one.");
-            } else if (session) {
-                console.log('Session successfully established');
-            }
-        }, 2000); // Wait 2 seconds for session to be established
+        const establishSession = async () => {
+            try {
+                console.log('URL Hash:', window.location.hash);
+                
+                // Parse the URL hash for auth tokens
+                const hashParams = new URLSearchParams(window.location.hash.substring(1));
+                const accessToken = hashParams.get('access_token');
+                const refreshToken = hashParams.get('refresh_token');
+                const type = hashParams.get('type');
 
-        return () => clearTimeout(timer);
-    }, [session]);
+                console.log('Token type:', type);
+                console.log('Has access token:', !!accessToken);
+
+                if (type === 'recovery' && accessToken && refreshToken) {
+                    console.log('Attempting to set session...');
+                    
+                    // Manually set the session using the tokens from the URL
+                    const { data, error } = await supabase.auth.setSession({
+                        access_token: accessToken,
+                        refresh_token: refreshToken,
+                    });
+
+                    if (error) {
+                        console.error('Error setting session:', error);
+                        setError("Invalid or expired password reset link. Please request a new one.");
+                        setHasValidSession(false);
+                    } else if (data.session) {
+                        console.log('Session established successfully:', data.session);
+                        setHasValidSession(true);
+                        // Clear the hash from URL for security
+                        window.history.replaceState(null, '', window.location.pathname);
+                    } else {
+                        console.error('No session returned');
+                        setError("Failed to establish session. Please request a new password reset link.");
+                        setHasValidSession(false);
+                    }
+                } else {
+                    console.log('No recovery tokens found in URL');
+                    setError("Invalid password reset link. Please request a new one.");
+                    setHasValidSession(false);
+                }
+            } catch (err) {
+                console.error('Error establishing session:', err);
+                setError("An error occurred. Please try requesting a new password reset link.");
+                setHasValidSession(false);
+            } finally {
+                setIsCheckingSession(false);
+            }
+        };
+
+        establishSession();
+    }, []);
 
     const validatePassword = (pwd: string): boolean => {
         // Password must be at least 8 characters long with one uppercase letter, one lowercase letter, one number, and one special character
@@ -56,12 +91,6 @@ export function ChangePassword() {
         setIsSubmitting(true);
 
         try {
-            // Check if we have a valid session
-            if (!session) {
-                setError("No active session found. Please click the password reset link from your email again.");
-                return;
-            }
-
             if (!password || !confirmPassword) {
                 setError("Please fill in all fields");
                 return;
@@ -80,7 +109,8 @@ export function ChangePassword() {
             const { error } = await updatePassword(password);
 
             if (error) {
-                setError(error.message);
+                console.error('Update password error:', error);
+                setError(error.message || "Failed to update password. Please try again.");
             } else {
                 setSuccess(true);
                 // Redirect to login after 2 seconds
@@ -89,6 +119,7 @@ export function ChangePassword() {
                 }, 2000);
             }
         } catch (err) {
+            console.error('Unexpected error:', err);
             setError("An unexpected error occurred");
         } finally {
             setIsSubmitting(false);
@@ -128,6 +159,17 @@ export function ChangePassword() {
                     {isCheckingSession ? (
                         <div className="flex w-full max-w-[360px] flex-col items-center gap-4">
                             <div className="text-gray-600">Verifying reset link...</div>
+                        </div>
+                    ) : !hasValidSession && error ? (
+                        <div className="flex w-full max-w-[360px] flex-col items-center gap-6 text-center">
+                            <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">{error}</div>
+                            <button
+                                type="button"
+                                onClick={() => navigate("/reset-password")}
+                                className="flex items-center gap-2 text-[14px] font-semibold text-gray-600 transition-colors hover:text-gray-900"
+                            >
+                                Request new reset link
+                            </button>
                         </div>
                     ) : !success ? (
                         <form onSubmit={handleSubmit} className="flex w-full max-w-[360px] flex-col items-center gap-6">
