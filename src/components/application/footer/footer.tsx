@@ -1,4 +1,5 @@
 // LinkedIn logo is now in public folder, accessed via public URL
+import { APP_VERSION } from "@/config/version";
 
 interface FooterProps {
     className?: string;
@@ -57,7 +58,7 @@ export function Footer({ className }: FooterProps) {
                         className="relative w-full shrink-0 text-center text-[12px] font-normal whitespace-pre-wrap text-black md:text-[14px]"
                         data-node-id="69:1769"
                     >
-                        Copyright 2025 Info-Power International, Inc. All Rights Reserved
+                        Copyright 2025 Info-Power International, Inc. All Rights Reserved | Version {APP_VERSION}
                     </p>
                 </div>
 
