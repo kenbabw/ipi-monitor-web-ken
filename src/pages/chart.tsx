@@ -39,10 +39,10 @@ interface DewPointStats {
     low: number;
 }
 
-// Helper function to calculate Y-axis domain with 2 unit padding and round to nearest multiple of 5
+// Helper function to calculate Y-axis domain with 5 unit padding and round to nearest multiple of 5
 const calculateYAxisDomain = (low: number, high: number): [number, number] => {
-    const paddedLow = low - 2;
-    const paddedHigh = high - 2;
+    const paddedLow = low - 5;
+    const paddedHigh = high + 5;
 
     // Round down to nearest multiple of 5 for min
     const roundedMin = Math.floor(paddedLow / 5) * 5;
@@ -373,15 +373,15 @@ const Chart = () => {
 
                                 <div className="rounded-xl border border-gray-200 bg-white p-5">
                                     {loading ? (
-                                        <div className="flex h-64 items-center justify-center">
+                                        <div className="flex h-80 items-center justify-center">
                                             <div className="text-gray-500">Loading chart data...</div>
                                         </div>
                                     ) : chartData.length === 0 ? (
-                                        <div className="flex h-64 items-center justify-center">
+                                        <div className="flex h-80 items-center justify-center">
                                             <div className="text-gray-500">No Temperature data available for the selected time period</div>
                                         </div>
                                     ) : (
-                                        <div className="h-64">
+                                        <div className="h-80">
                                             <ResponsiveContainer width="100%" height="100%">
                                                 <LineChart data={chartData}>
                                                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
@@ -466,15 +466,15 @@ const Chart = () => {
 
                                 <div className="rounded-xl border border-gray-200 bg-white p-5">
                                     {loading ? (
-                                        <div className="flex h-64 items-center justify-center">
+                                        <div className="flex h-80 items-center justify-center">
                                             <div className="text-gray-500">Loading humidity data...</div>
                                         </div>
                                     ) : chartData.length === 0 ? (
-                                        <div className="flex h-64 items-center justify-center">
+                                        <div className="flex h-80 items-center justify-center">
                                             <div className="text-gray-500">No Humidity data available for the selected time period</div>
                                         </div>
                                     ) : (
-                                        <div className="h-64">
+                                        <div className="h-80">
                                             <ResponsiveContainer width="100%" height="100%">
                                                 <LineChart data={chartData}>
                                                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
@@ -559,15 +559,15 @@ const Chart = () => {
 
                                 <div className="rounded-xl border border-gray-200 bg-white p-5">
                                     {loading ? (
-                                        <div className="flex h-64 items-center justify-center">
+                                        <div className="flex h-80 items-center justify-center">
                                             <div className="text-gray-500">Loading dew point data...</div>
                                         </div>
                                     ) : chartData.length === 0 ? (
-                                        <div className="flex h-64 items-center justify-center">
+                                        <div className="flex h-80 items-center justify-center">
                                             <div className="text-gray-500">No Dew Point data available for the selected time period</div>
                                         </div>
                                     ) : (
-                                        <div className="h-64">
+                                        <div className="h-80">
                                             <ResponsiveContainer width="100%" height="100%">
                                                 <LineChart data={chartData}>
                                                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
