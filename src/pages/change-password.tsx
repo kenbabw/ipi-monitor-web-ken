@@ -22,47 +22,47 @@ export function ChangePassword() {
     useEffect(() => {
         const establishSession = async () => {
             try {
-                console.log('=== Password Reset Debug Info ===');
-                console.log('Full URL:', window.location.href);
-                console.log('URL Hash:', window.location.hash);
-                console.log('URL Search:', window.location.search);
-                
+                console.log("=== Password Reset Debug Info ===");
+                console.log("Full URL:", window.location.href);
+                console.log("URL Hash:", window.location.hash);
+                console.log("URL Search:", window.location.search);
+
                 // Try to parse from hash first (most common for Supabase)
                 let hashParams = new URLSearchParams(window.location.hash.substring(1));
-                let accessToken = hashParams.get('access_token');
-                let refreshToken = hashParams.get('refresh_token');
-                let type = hashParams.get('type');
+                let accessToken = hashParams.get("access_token");
+                let refreshToken = hashParams.get("refresh_token");
+                let type = hashParams.get("type");
 
                 // If not in hash, try query parameters
                 if (!accessToken) {
-                    console.log('No tokens in hash, checking query parameters...');
+                    console.log("No tokens in hash, checking query parameters...");
                     const searchParams = new URLSearchParams(window.location.search);
-                    accessToken = searchParams.get('access_token');
-                    refreshToken = searchParams.get('refresh_token');
-                    type = searchParams.get('type');
+                    accessToken = searchParams.get("access_token");
+                    refreshToken = searchParams.get("refresh_token");
+                    type = searchParams.get("type");
                 }
 
-                console.log('Token type:', type);
-                console.log('Has access token:', !!accessToken);
-                console.log('Has refresh token:', !!refreshToken);
-                console.log('Access token (first 20 chars):', accessToken?.substring(0, 20));
+                console.log("Token type:", type);
+                console.log("Has access token:", !!accessToken);
+                console.log("Has refresh token:", !!refreshToken);
+                console.log("Access token (first 20 chars):", accessToken?.substring(0, 20));
 
                 // First check if Supabase has already established a session
                 const { data: sessionData } = await supabase.auth.getSession();
-                console.log('Existing session check:', !!sessionData.session);
+                console.log("Existing session check:", !!sessionData.session);
 
                 if (sessionData.session) {
-                    console.log('Session already exists from Supabase auto-detection');
+                    console.log("Session already exists from Supabase auto-detection");
                     setHasValidSession(true);
                     // Clear the hash/query from URL for security
-                    window.history.replaceState(null, '', window.location.pathname);
+                    window.history.replaceState(null, "", window.location.pathname);
                     setIsCheckingSession(false);
                     return;
                 }
 
-                if (type === 'recovery' && accessToken && refreshToken) {
-                    console.log('Attempting to manually set session...');
-                    
+                if (type === "recovery" && accessToken && refreshToken) {
+                    console.log("Attempting to manually set session...");
+
                     // Manually set the session using the tokens from the URL
                     const { data, error } = await supabase.auth.setSession({
                         access_token: accessToken,
@@ -70,17 +70,17 @@ export function ChangePassword() {
                     });
 
                     if (error) {
-                        console.error('Error setting session:', error);
+                        console.error("Error setting session:", error);
                         setError("Invalid or expired password reset link. Please request a new one.");
                         setHasValidSession(false);
                     } else if (data.session) {
-                        console.log('Session established successfully!');
-                        console.log('User:', data.session.user.email);
+                        console.log("Session established successfully!");
+                        console.log("User:", data.session.user.email);
                         setHasValidSession(true);
                         // Clear the hash/query from URL for security
-                        window.history.replaceState(null, '', window.location.pathname);
+                        window.history.replaceState(null, "", window.location.pathname);
                     } else {
-                        console.error('No session returned from setSession');
+                        console.error("No session returned from setSession");
                         setError("Failed to establish session. Please request a new password reset link.");
                         setHasValidSession(false);
                     }
@@ -89,7 +89,13 @@ export function ChangePassword() {
                     console.log('- type === "recovery":', type === 'recovery');
                     console.log('- has accessToken:', !!accessToken);
                     console.log('- has refreshToken:', !!refreshToken);
-                    setError("Invalid password reset link. Please request a new one.");
+                    console.log('\n⚠️ CONFIGURATION ISSUE:');
+                    console.log('The password reset link does not contain authentication tokens.');
+                    console.log('This usually means:');
+                    console.log('1. The redirect URL is not configured in Supabase dashboard');
+                    console.log('2. Go to Supabase Dashboard → Authentication → URL Configuration');
+                    console.log('3. Add https://ipimonitor.vercel.app/change-password to "Redirect URLs"');
+                    setError("Password reset link is missing authentication tokens. Please contact support or check the Supabase configuration.");
                     setHasValidSession(false);
                 }
             } catch (err) {
@@ -140,7 +146,7 @@ export function ChangePassword() {
             const { error } = await updatePassword(password);
 
             if (error) {
-                console.error('Update password error:', error);
+                console.error("Update password error:", error);
                 setError(error.message || "Failed to update password. Please try again.");
             } else {
                 setSuccess(true);
@@ -150,7 +156,7 @@ export function ChangePassword() {
                 }, 2000);
             }
         } catch (err) {
-            console.error('Unexpected error:', err);
+            console.error("Unexpected error:", err);
             setError("An unexpected error occurred");
         } finally {
             setIsSubmitting(false);
