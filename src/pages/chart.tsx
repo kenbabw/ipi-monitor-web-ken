@@ -39,10 +39,10 @@ interface DewPointStats {
     low: number;
 }
 
-// Helper function to calculate Y-axis domain with 5 unit padding and round to nearest multiple of 5
+// Helper function to calculate Y-axis domain with 2 unit padding and round to nearest multiple of 5
 const calculateYAxisDomain = (low: number, high: number): [number, number] => {
-    const paddedLow = low - 5;
-    const paddedHigh = high + 5;
+    const paddedLow = low - 2;
+    const paddedHigh = high - 2;
 
     // Round down to nearest multiple of 5 for min
     const roundedMin = Math.floor(paddedLow / 5) * 5;
@@ -170,17 +170,20 @@ const Chart = () => {
             return;
         }
 
-        const processedData: ChartDataPoint[] = measurements.map((measurement) => ({
-            time: new Date(measurement.measurement_date_time).toLocaleTimeString("en-US", {
-                hour: "2-digit",
-                minute: "2-digit",
-                month: "short",
-                day: "numeric",
-            }),
-            temperature: measurement.measurement_temperature,
-            humidity: measurement.measurement_humidity || 0,
-            dewPoint: measurement.measurement_dew_point || 0,
-        }));
+        const processedData: ChartDataPoint[] = measurements.map((measurement) => {
+            const date = new Date(measurement.measurement_date_time);
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const day = String(date.getDate()).padStart(2, "0");
+            const hours = String(date.getHours()).padStart(2, "0");
+            const minutes = String(date.getMinutes()).padStart(2, "0");
+
+            return {
+                time: `${month}/${day} ${hours}:${minutes}`,
+                temperature: measurement.measurement_temperature,
+                humidity: measurement.measurement_humidity || 0,
+                dewPoint: measurement.measurement_dew_point || 0,
+            };
+        });
 
         // Calculate statistics
         const temperatures = measurements.map((m) => m.measurement_temperature);
@@ -346,7 +349,7 @@ const Chart = () => {
                             </div>
                             <div className="flex items-center gap-2">
                                 <Checkbox isSelected={showAll} onChange={handleShowAll} isDisabled={!canSelectCharts} />
-                                <span className={`text-sm font-bold text-brand-600 ${!canSelectCharts ? "opacity-50" : ""}`}>All</span>
+                                <span className={`text-sm font-bold text-[#000000] ${!canSelectCharts ? "opacity-50" : ""}`}>All</span>
                             </div>
                         </div>
 
@@ -365,9 +368,7 @@ const Chart = () => {
                         {showTemperature && (
                             <div className="rounded-xl border border-gray-200 bg-gray-50 p-5">
                                 <div className="mb-4">
-                                    <h2 className="text-sm font-semibold text-gray-900">
-                                        Temperature{selectedDevice ? ` - ${selectedDevice.user_device_name || selectedDevice.device_name}` : ""}
-                                    </h2>
+                                    <h2 className="text-sm font-semibold text-gray-900">Temperature</h2>
                                 </div>
 
                                 <div className="rounded-xl border border-gray-200 bg-white p-5">
@@ -415,32 +416,35 @@ const Chart = () => {
                                                         <>
                                                             <ReferenceLine
                                                                 y={temperatureStats.average}
-                                                                stroke="#9e77ed"
+                                                                stroke="#000000"
                                                                 strokeDasharray="5 5"
                                                                 strokeWidth={2}
                                                                 label={{
                                                                     value: `Avg: ${temperatureStats.average.toFixed(1)}°`,
                                                                     position: "top",
+                                                                    style: { fontWeight: "bold" },
                                                                 }}
                                                             />
                                                             <ReferenceLine
                                                                 y={temperatureStats.high}
-                                                                stroke="#ef4444"
+                                                                stroke="#000000"
                                                                 strokeDasharray="5 5"
                                                                 strokeWidth={2}
                                                                 label={{
                                                                     value: `High: ${temperatureStats.high.toFixed(1)}°`,
                                                                     position: "top",
+                                                                    style: { fontWeight: "bold" },
                                                                 }}
                                                             />
                                                             <ReferenceLine
                                                                 y={temperatureStats.low}
-                                                                stroke="#22c55e"
+                                                                stroke="#000000"
                                                                 strokeDasharray="5 5"
                                                                 strokeWidth={2}
                                                                 label={{
                                                                     value: `Low: ${temperatureStats.low.toFixed(1)}°`,
-                                                                    position: "top",
+                                                                    position: "bottom",
+                                                                    style: { fontWeight: "bold" },
                                                                 }}
                                                             />
                                                         </>
@@ -457,9 +461,7 @@ const Chart = () => {
                         {showHumidity && (
                             <div className="mt-6 rounded-xl border border-gray-200 bg-gray-50 p-5">
                                 <div className="mb-4">
-                                    <h2 className="text-sm font-semibold text-gray-900">
-                                        Humidity{selectedDevice ? ` - ${selectedDevice.user_device_name || selectedDevice.device_name}` : ""}
-                                    </h2>
+                                    <h2 className="text-sm font-semibold text-gray-900">Humidity</h2>
                                 </div>
 
                                 <div className="rounded-xl border border-gray-200 bg-white p-5">
@@ -507,32 +509,35 @@ const Chart = () => {
                                                         <>
                                                             <ReferenceLine
                                                                 y={humidityStats.average}
-                                                                stroke="#9e77ed"
+                                                                stroke="#000000"
                                                                 strokeDasharray="5 5"
                                                                 strokeWidth={2}
                                                                 label={{
                                                                     value: `Avg: ${humidityStats.average.toFixed(1)}%`,
                                                                     position: "top",
+                                                                    style: { fontWeight: "bold" },
                                                                 }}
                                                             />
                                                             <ReferenceLine
                                                                 y={humidityStats.high}
-                                                                stroke="#ef4444"
+                                                                stroke="#000000"
                                                                 strokeDasharray="5 5"
                                                                 strokeWidth={2}
                                                                 label={{
                                                                     value: `High: ${humidityStats.high.toFixed(1)}%`,
                                                                     position: "top",
+                                                                    style: { fontWeight: "bold" },
                                                                 }}
                                                             />
                                                             <ReferenceLine
                                                                 y={humidityStats.low}
-                                                                stroke="#22c55e"
+                                                                stroke="#000000"
                                                                 strokeDasharray="5 5"
                                                                 strokeWidth={2}
                                                                 label={{
                                                                     value: `Low: ${humidityStats.low.toFixed(1)}%`,
-                                                                    position: "top",
+                                                                    position: "bottom",
+                                                                    style: { fontWeight: "bold" },
                                                                 }}
                                                             />
                                                         </>
@@ -549,9 +554,7 @@ const Chart = () => {
                         {showDewPoint && (
                             <div className="mt-6 rounded-xl border border-gray-200 bg-gray-50 p-5">
                                 <div className="mb-4">
-                                    <h2 className="text-sm font-semibold text-gray-900">
-                                        Dew Point{selectedDevice ? ` - ${selectedDevice.user_device_name || selectedDevice.device_name}` : ""}
-                                    </h2>
+                                    <h2 className="text-sm font-semibold text-gray-900">Dew Point</h2>
                                 </div>
 
                                 <div className="rounded-xl border border-gray-200 bg-white p-5">
@@ -599,32 +602,35 @@ const Chart = () => {
                                                         <>
                                                             <ReferenceLine
                                                                 y={dewPointStats.average}
-                                                                stroke="#9e77ed"
+                                                                stroke="#000000"
                                                                 strokeDasharray="5 5"
                                                                 strokeWidth={2}
                                                                 label={{
                                                                     value: `Avg: ${dewPointStats.average.toFixed(1)}°`,
                                                                     position: "top",
+                                                                    style: { fontWeight: "bold" },
                                                                 }}
                                                             />
                                                             <ReferenceLine
                                                                 y={dewPointStats.high}
-                                                                stroke="#ef4444"
+                                                                stroke="#000000"
                                                                 strokeDasharray="5 5"
                                                                 strokeWidth={2}
                                                                 label={{
                                                                     value: `High: ${dewPointStats.high.toFixed(1)}°`,
                                                                     position: "top",
+                                                                    style: { fontWeight: "bold" },
                                                                 }}
                                                             />
                                                             <ReferenceLine
                                                                 y={dewPointStats.low}
-                                                                stroke="#22c55e"
+                                                                stroke="#000000"
                                                                 strokeDasharray="5 5"
                                                                 strokeWidth={2}
                                                                 label={{
                                                                     value: `Low: ${dewPointStats.low.toFixed(1)}°`,
-                                                                    position: "top",
+                                                                    position: "bottom",
+                                                                    style: { fontWeight: "bold" },
                                                                 }}
                                                             />
                                                         </>

@@ -105,7 +105,8 @@ export function SupabaseProvider({ children }: SupabaseProviderProps) {
 
     const resetPassword = async (email: string) => {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: `${window.location.origin}/change-password`,
+            redirectTo: `https://ipimonitor.vercel.app/change-password`,
+            //redirectTo: `${window.location.origin}/change-password`,
         });
         return { error };
     };
