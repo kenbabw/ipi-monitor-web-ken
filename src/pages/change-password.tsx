@@ -4,11 +4,10 @@ import { Footer } from "@/components/application/footer/footer";
 import { Header } from "@/components/application/header/header";
 import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
-import { supabase } from "@/lib/supabase";
 import { useSupabase } from "@/providers/supabase-provider";
 
 export function ChangePassword() {
-    const { updatePassword } = useSupabase();
+    const { updatePassword, session } = useSupabase();
     const navigate = useNavigate();
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -17,38 +16,27 @@ export function ChangePassword() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isCheckingSession, setIsCheckingSession] = useState(true);
 
-    // Handle password reset token from URL
+    // Wait for session to be established from URL hash
     useEffect(() => {
-        const checkSession = async () => {
-            try {
-                // Check if we have a hash in the URL (from password reset email)
-                const hashParams = new URLSearchParams(window.location.hash.substring(1));
-                const accessToken = hashParams.get('access_token');
-                const refreshToken = hashParams.get('refresh_token');
-                const type = hashParams.get('type');
-
-                if (type === 'recovery' && accessToken) {
-                    // Exchange the tokens for a session
-                    const { error } = await supabase.auth.setSession({
-                        access_token: accessToken,
-                        refresh_token: refreshToken || '',
-                    });
-
-                    if (error) {
-                        console.error('Error setting session:', error);
-                        setError('Invalid or expired password reset link. Please request a new one.');
-                    }
-                }
-            } catch (err) {
-                console.error('Error checking session:', err);
-                setError('An error occurred. Please try requesting a new password reset link.');
-            } finally {
-                setIsCheckingSession(false);
+        // Log the current state for debugging
+        console.log('Change Password - Session:', session);
+        console.log('Change Password - URL Hash:', window.location.hash);
+        
+        // Give Supabase time to process the URL hash and establish session
+        const timer = setTimeout(() => {
+            setIsCheckingSession(false);
+            
+            // If still no session after waiting, show error
+            if (!session && window.location.hash.includes('access_token')) {
+                console.log('No session established after waiting');
+                setError("Invalid or expired password reset link. Please request a new one.");
+            } else if (session) {
+                console.log('Session successfully established');
             }
-        };
+        }, 2000); // Wait 2 seconds for session to be established
 
-        checkSession();
-    }, []);
+        return () => clearTimeout(timer);
+    }, [session]);
 
     const validatePassword = (pwd: string): boolean => {
         // Password must be at least 8 characters long with one uppercase letter, one lowercase letter, one number, and one special character
@@ -68,6 +56,12 @@ export function ChangePassword() {
         setIsSubmitting(true);
 
         try {
+            // Check if we have a valid session
+            if (!session) {
+                setError("No active session found. Please click the password reset link from your email again.");
+                return;
+            }
+
             if (!password || !confirmPassword) {
                 setError("Please fill in all fields");
                 return;
