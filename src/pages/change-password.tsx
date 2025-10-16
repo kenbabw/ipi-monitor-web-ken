@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { Footer } from "@/components/application/footer/footer";
 import { Header } from "@/components/application/header/header";
 import { Button } from "@/components/base/buttons/button";
 import { Input } from "@/components/base/input/input";
+import { supabase } from "@/lib/supabase";
 import { useSupabase } from "@/providers/supabase-provider";
 
 export function ChangePassword() {
@@ -14,6 +15,40 @@ export function ChangePassword() {
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isCheckingSession, setIsCheckingSession] = useState(true);
+
+    // Handle password reset token from URL
+    useEffect(() => {
+        const checkSession = async () => {
+            try {
+                // Check if we have a hash in the URL (from password reset email)
+                const hashParams = new URLSearchParams(window.location.hash.substring(1));
+                const accessToken = hashParams.get('access_token');
+                const refreshToken = hashParams.get('refresh_token');
+                const type = hashParams.get('type');
+
+                if (type === 'recovery' && accessToken) {
+                    // Exchange the tokens for a session
+                    const { error } = await supabase.auth.setSession({
+                        access_token: accessToken,
+                        refresh_token: refreshToken || '',
+                    });
+
+                    if (error) {
+                        console.error('Error setting session:', error);
+                        setError('Invalid or expired password reset link. Please request a new one.');
+                    }
+                }
+            } catch (err) {
+                console.error('Error checking session:', err);
+                setError('An error occurred. Please try requesting a new password reset link.');
+            } finally {
+                setIsCheckingSession(false);
+            }
+        };
+
+        checkSession();
+    }, []);
 
     const validatePassword = (pwd: string): boolean => {
         // Password must be at least 8 characters long with one uppercase letter, one lowercase letter, one number, and one special character
@@ -95,8 +130,12 @@ export function ChangePassword() {
                         <p className="text-gray-600">Your new password must be different to previously used passwords.</p>
                     </div>
 
-                    {/* Form */}
-                    {!success ? (
+                    {/* Loading State */}
+                    {isCheckingSession ? (
+                        <div className="flex w-full max-w-[360px] flex-col items-center gap-4">
+                            <div className="text-gray-600">Verifying reset link...</div>
+                        </div>
+                    ) : !success ? (
                         <form onSubmit={handleSubmit} className="flex w-full max-w-[360px] flex-col items-center gap-6">
                             <div className="flex w-full flex-col gap-5">
                                 {/* Error Message */}
