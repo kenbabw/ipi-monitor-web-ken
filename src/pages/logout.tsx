@@ -7,16 +7,20 @@ import { useSupabase } from "@/providers/supabase-provider";
 
 export function Logout() {
     const navigate = useNavigate();
-    const { signOut } = useSupabase();
+    const { signOut, user } = useSupabase();
     const [isLoggingOut, setIsLoggingOut] = useState(true);
+    const [logoutAttempted, setLogoutAttempted] = useState(false);
 
     // Ensure user is signed out when this page loads
     useEffect(() => {
+        if (logoutAttempted) return;
+        
         const performLogout = async () => {
+            setLogoutAttempted(true);
             try {
                 await signOut();
-                // Wait a bit to ensure the auth state has propagated
-                await new Promise((resolve) => setTimeout(resolve, 500));
+                // Give a moment for the auth state to update
+                await new Promise((resolve) => setTimeout(resolve, 1000));
             } catch (err) {
                 console.error("Error during logout:", err);
             } finally {
@@ -25,14 +29,14 @@ export function Logout() {
         };
 
         performLogout();
-    }, [signOut]);
+    }, [signOut, logoutAttempted]);
 
     const handleLoginClick = () => {
         navigate("/login");
     };
 
-    // Show loading state while logging out
-    if (isLoggingOut) {
+    // Show loading state while logging out OR if user still exists after logout attempt
+    if (isLoggingOut || (logoutAttempted && user)) {
         return (
             <div className="flex min-h-screen items-center justify-center bg-white">
                 <div className="text-[#1c78bf]">Logging out...</div>
