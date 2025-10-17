@@ -173,7 +173,7 @@ export function ChangePassword() {
                 <Header className="relative box-border flex w-full shrink-0 flex-col content-stretch items-start justify-between bg-white px-[8px] py-[8px]" />
 
                 {/* Main Content */}
-                <div className="flex flex-1 flex-col items-center justify-start gap-6 px-4 py-6 sm:gap-[40px] sm:px-6 sm:py-8 md:justify-center">
+                <div className="flex flex-1 flex-col items-center justify-start gap-4 px-4 py-4 sm:gap-6 sm:px-6 sm:py-6 md:justify-center">
                     {/* Icon */}
                     <div className="flex h-10 w-10 items-center justify-center rounded-full border-4 border-gray-50 sm:h-12 sm:w-12 sm:border-8">
                         <svg className="h-5 w-5 text-gray-600 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -188,17 +188,17 @@ export function ChangePassword() {
 
                     {/* Title and Description */}
                     <div className="text-center">
-                        <h1 className="mb-3 text-2xl leading-[normal] font-bold text-black not-italic sm:text-[32px]">Set new password</h1>
+                        <h1 className="mb-2 text-2xl leading-[normal] font-bold text-black not-italic sm:text-[32px]">Set new password</h1>
                         <p className="text-xs text-gray-600 sm:text-sm">Your new password must be different to previously used passwords.</p>
                     </div>
 
                     {/* Loading State */}
                     {isCheckingSession ? (
-                        <div className="flex w-full max-w-[360px] flex-col items-center gap-4">
+                        <div className="flex w-full max-w-[360px] flex-col items-center gap-3">
                             <div className="text-xs text-gray-600 sm:text-sm">Verifying reset link...</div>
                         </div>
                     ) : !hasValidSession && error ? (
-                        <div className="flex w-full max-w-[360px] flex-col items-center gap-4 text-center sm:gap-6">
+                        <div className="flex w-full max-w-[360px] flex-col items-center gap-3 text-center sm:gap-4">
                             <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-xs text-red-700 sm:p-4 sm:text-sm">{error}</div>
                             <button
                                 type="button"
@@ -209,8 +209,8 @@ export function ChangePassword() {
                             </button>
                         </div>
                     ) : !success ? (
-                        <form onSubmit={handleSubmit} className="flex w-full max-w-[360px] flex-col items-center gap-4 sm:gap-6">
-                            <div className="flex w-full flex-col gap-4 sm:gap-5">
+                        <form onSubmit={handleSubmit} className="flex w-full max-w-[360px] flex-col items-center gap-3 sm:gap-4">
+                            <div className="flex w-full flex-col gap-3 sm:gap-4">
                                 {/* Error Message */}
                                 {error && <div className="w-full rounded border border-red-200 bg-red-50 p-3 text-xs text-red-700 sm:text-sm">{error}</div>}
 
@@ -269,7 +269,7 @@ export function ChangePassword() {
                             </button>
                         </form>
                     ) : (
-                        <div className="flex w-full max-w-[360px] flex-col items-center gap-4 text-center sm:gap-6">
+                        <div className="flex w-full max-w-[360px] flex-col items-center gap-3 text-center sm:gap-4">
                             <div className="rounded-lg border border-green-200 bg-green-50 p-3 text-xs text-green-700 sm:p-4 sm:text-sm">
                                 Your password has been successfully updated! Redirecting to login...
                             </div>

@@ -14,7 +14,7 @@ export function Logout() {
     // Ensure user is signed out when this page loads
     useEffect(() => {
         if (logoutAttempted) return;
-        
+
         const performLogout = async () => {
             setLogoutAttempted(true);
             try {
