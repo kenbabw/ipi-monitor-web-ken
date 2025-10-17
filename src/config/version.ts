@@ -9,4 +9,4 @@
  * Version History:
  * - 1.0 (2025-10-16): Initial release with chart functionality, device info, password reset
  */
-export const APP_VERSION = '1.0';
+export const APP_VERSION = '1.1';
