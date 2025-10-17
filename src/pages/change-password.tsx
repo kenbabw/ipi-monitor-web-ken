@@ -188,7 +188,7 @@ export function ChangePassword() {
 
                     {/* Title and Description */}
                     <div className="text-center">
-                        <h1 className="mb-2 text-xl leading-[normal] font-bold text-black not-italic sm:text-2xl">Set new password</h1>
+                        <h1 className="mb-2 text-xl leading-[normal] font-bold text-[#1c78bf] not-italic sm:text-2xl">Set new password</h1>
                         <p className="text-xs text-gray-600 sm:text-sm">Your new password must be different to previously used passwords.</p>
                     </div>
 
@@ -210,7 +210,7 @@ export function ChangePassword() {
                         </div>
                     ) : !success ? (
                         <form onSubmit={handleSubmit} className="flex w-full max-w-[360px] flex-col items-center gap-3 sm:gap-4">
-                            <div className="flex w-full flex-col gap-3 sm:gap-4">
+                            <div className="flex w-full flex-col gap-2 sm:gap-3">
                                 {/* Error Message */}
                                 {error && <div className="w-full rounded border border-red-200 bg-red-50 p-3 text-xs text-red-700 sm:text-sm">{error}</div>}
 
@@ -224,11 +224,7 @@ export function ChangePassword() {
                                         placeholder="Enter your password"
                                         className="w-full"
                                     />
-                                    <p className="text-xs text-gray-600">
-                                        Must be 8+ characters with uppercase, lowercase,
-                                        <br />
-                                        number, and special character.
-                                    </p>
+                                    <p className="text-xs text-gray-600">Must be 8+ chars with uppercase, lowercase, number, and special character.</p>
                                 </div>
 
                                 {/* Confirm Password Field */}
