@@ -7,7 +7,7 @@ import { useSupabase } from "@/providers/supabase-provider";
 
 export function Logout() {
     const navigate = useNavigate();
-    const { signOut, user } = useSupabase();
+    const { signOut } = useSupabase();
     const [isLoggingOut, setIsLoggingOut] = useState(true);
 
     // Ensure user is signed out when this page loads
@@ -32,7 +32,7 @@ export function Logout() {
     };
 
     // Show loading state while logging out
-    if (isLoggingOut || user) {
+    if (isLoggingOut) {
         return (
             <div className="flex min-h-screen items-center justify-center bg-white">
                 <div className="text-[#1c78bf]">Logging out...</div>

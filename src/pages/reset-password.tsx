@@ -60,7 +60,7 @@ export function ResetPassword() {
 
                     {/* Title and Description */}
                     <div className="text-center">
-                        <h1 className="mb-3 text-2xl leading-[normal] font-bold text-black not-italic sm:text-[32px]">Forgot password?</h1>
+                        <h1 className="mb-3 text-2xl leading-[normal] font-bold text-[#1c78bf] text-black not-italic sm:text-[32px]">Forgot password?</h1>
                         <p className="text-xs text-gray-600 sm:text-sm">No worries, we'll send you reset instructions.</p>
                     </div>
 
