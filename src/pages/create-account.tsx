@@ -120,7 +120,7 @@ export function CreateAccount() {
                 {/* Main Content */}
                 <div className="flex flex-1 flex-col items-center justify-center gap-2 px-4 py-4 sm:px-6 sm:py-6">
                     {/* Title */}
-                    <h1 className="text-2xl font-bold not-italic leading-[normal] text-[#1c78bf] sm:text-[32px]">Create your Account</h1>
+                    <h1 className="text-2xl leading-[normal] font-bold text-[#1c78bf] not-italic sm:text-[32px]">Create your Account</h1>
 
                     {/* Create Account Form */}
                     <form onSubmit={handleSubmit} className="flex w-full max-w-lg flex-col gap-3">
@@ -198,7 +198,7 @@ export function CreateAccount() {
                                 backgroundImage: "linear-gradient(90deg, rgb(255, 155, 0) 0%, rgb(255, 155, 0) 100%)",
                             }}
                         >
-                            <span className="whitespace-pre text-lg font-bold not-italic leading-[normal] text-white sm:text-[20px]">
+                            <span className="text-lg leading-[normal] font-bold whitespace-pre text-white not-italic sm:text-[20px]">
                                 {isSubmitting ? "Creating Account..." : "Create my account"}
                             </span>
                         </Button>
@@ -208,7 +208,7 @@ export function CreateAccount() {
                             <button
                                 type="button"
                                 onClick={handleAlreadyHaveAccount}
-                                className="text-sm font-medium not-italic leading-[normal] text-[#1c78bf] hover:underline sm:text-[16px]"
+                                className="text-sm leading-[normal] font-medium text-[#1c78bf] not-italic hover:underline sm:text-[16px]"
                             >
                                 I already have an account
                             </button>

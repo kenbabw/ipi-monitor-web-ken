@@ -28,7 +28,7 @@ export function Logout() {
                 {/* Main Content */}
                 <div className="flex flex-1 flex-col items-center justify-center gap-6 px-4 py-4 sm:gap-[40px] sm:px-6 sm:py-8">
                     {/* Success Message */}
-                    <h1 className="whitespace-pre text-center text-2xl font-bold not-italic leading-[normal] text-[#1c78bf] sm:text-[32px]">
+                    <h1 className="text-center text-2xl leading-[normal] font-bold whitespace-pre text-[#1c78bf] not-italic sm:text-[32px]">
                         You have successfully logged out of IPI Monitor!
                     </h1>
 
@@ -40,7 +40,7 @@ export function Logout() {
                             backgroundImage: "linear-gradient(90deg, rgb(255, 155, 0) 0%, rgb(255, 155, 0) 100%)",
                         }}
                     >
-                        <span className="whitespace-pre text-lg font-bold not-italic leading-[normal] text-white sm:text-[20px]">Login</span>
+                        <span className="text-lg leading-[normal] font-bold whitespace-pre text-white not-italic sm:text-[20px]">Login</span>
                     </Button>
                 </div>
 

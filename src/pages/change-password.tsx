@@ -173,10 +173,10 @@ export function ChangePassword() {
                 <Header className="relative box-border flex w-full shrink-0 flex-col content-stretch items-start justify-between bg-white px-[8px] py-[8px]" />
 
                 {/* Main Content */}
-                <div className="flex flex-1 flex-col items-center justify-center gap-[40px] px-4 py-8">
+                <div className="flex flex-1 flex-col items-center justify-start gap-6 px-4 py-6 sm:gap-[40px] sm:px-6 sm:py-8 md:justify-center">
                     {/* Icon */}
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full border-8 border-gray-50">
-                        <svg className="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full border-4 border-gray-50 sm:h-12 sm:w-12 sm:border-8">
+                        <svg className="h-5 w-5 text-gray-600 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
@@ -188,31 +188,31 @@ export function ChangePassword() {
 
                     {/* Title and Description */}
                     <div className="text-center">
-                        <h1 className="mb-3 text-[32px] leading-[normal] font-bold text-black not-italic">Set new password</h1>
-                        <p className="text-gray-600">Your new password must be different to previously used passwords.</p>
+                        <h1 className="mb-3 text-2xl leading-[normal] font-bold text-black not-italic sm:text-[32px]">Set new password</h1>
+                        <p className="text-xs text-gray-600 sm:text-sm">Your new password must be different to previously used passwords.</p>
                     </div>
 
                     {/* Loading State */}
                     {isCheckingSession ? (
                         <div className="flex w-full max-w-[360px] flex-col items-center gap-4">
-                            <div className="text-gray-600">Verifying reset link...</div>
+                            <div className="text-xs text-gray-600 sm:text-sm">Verifying reset link...</div>
                         </div>
                     ) : !hasValidSession && error ? (
-                        <div className="flex w-full max-w-[360px] flex-col items-center gap-6 text-center">
-                            <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">{error}</div>
+                        <div className="flex w-full max-w-[360px] flex-col items-center gap-4 text-center sm:gap-6">
+                            <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-xs text-red-700 sm:p-4 sm:text-sm">{error}</div>
                             <button
                                 type="button"
                                 onClick={() => navigate("/reset-password")}
-                                className="flex items-center gap-2 text-[14px] font-semibold text-gray-600 transition-colors hover:text-gray-900"
+                                className="flex items-center gap-2 text-xs font-semibold text-gray-600 transition-colors hover:text-gray-900 sm:text-[14px]"
                             >
                                 Request new reset link
                             </button>
                         </div>
                     ) : !success ? (
-                        <form onSubmit={handleSubmit} className="flex w-full max-w-[360px] flex-col items-center gap-6">
-                            <div className="flex w-full flex-col gap-5">
+                        <form onSubmit={handleSubmit} className="flex w-full max-w-[360px] flex-col items-center gap-4 sm:gap-6">
+                            <div className="flex w-full flex-col gap-4 sm:gap-5">
                                 {/* Error Message */}
-                                {error && <div className="w-full rounded border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div>}
+                                {error && <div className="w-full rounded border border-red-200 bg-red-50 p-3 text-xs text-red-700 sm:text-sm">{error}</div>}
 
                                 {/* Password Field */}
                                 <div className="flex flex-col gap-1.5">
@@ -246,12 +246,12 @@ export function ChangePassword() {
                                 type="submit"
                                 isLoading={isSubmitting}
                                 isDisabled={isSubmitting}
-                                className="box-border flex h-[52px] w-full items-center justify-center gap-[10px] rounded-[12px] px-[16px] py-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
+                                className="box-border flex h-[48px] w-full items-center justify-center gap-[10px] rounded-[12px] px-[16px] py-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] sm:h-[52px]"
                                 style={{
                                     backgroundImage: "linear-gradient(90deg, rgb(255, 155, 0) 0%, rgb(255, 155, 0) 100%)",
                                 }}
                             >
-                                <span className="text-[20px] leading-[normal] font-bold whitespace-pre text-white not-italic">
+                                <span className="text-lg leading-[normal] font-bold whitespace-pre text-white not-italic sm:text-[20px]">
                                     {isSubmitting ? "Updating..." : "Reset password"}
                                 </span>
                             </Button>
@@ -260,17 +260,17 @@ export function ChangePassword() {
                             <button
                                 type="button"
                                 onClick={handleBackToLogin}
-                                className="flex items-center gap-2 text-[14px] font-semibold text-gray-600 transition-colors hover:text-gray-900"
+                                className="flex items-center gap-2 text-xs font-semibold text-gray-600 transition-colors hover:text-gray-900 sm:text-[14px]"
                             >
-                                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg className="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                                 </svg>
                                 Back to log in
                             </button>
                         </form>
                     ) : (
-                        <div className="flex w-full max-w-[360px] flex-col items-center gap-6 text-center">
-                            <div className="rounded-lg border border-green-200 bg-green-50 p-4 text-green-700">
+                        <div className="flex w-full max-w-[360px] flex-col items-center gap-4 text-center sm:gap-6">
+                            <div className="rounded-lg border border-green-200 bg-green-50 p-3 text-xs text-green-700 sm:p-4 sm:text-sm">
                                 Your password has been successfully updated! Redirecting to login...
                             </div>
                         </div>

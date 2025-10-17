@@ -124,7 +124,7 @@ export const DeviceInformation = () => {
                             {/* Welcome and action buttons */}
                             <div className="flex w-full flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between">
                                 <div className="flex flex-col items-start">
-                                    <p className="text-lg font-semibold leading-[30px] text-[#181d27] sm:text-xl">Welcome back, {userName}</p>
+                                    <p className="text-lg leading-[30px] font-semibold text-[#181d27] sm:text-xl">Welcome back, {userName}</p>
                                 </div>
                                 <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                                     <Button color="secondary" className="px-3 py-2 text-xs font-semibold sm:px-4 sm:text-sm">
@@ -268,7 +268,9 @@ export const DeviceInformation = () => {
                     </div>
                 ) : (
                     <div className="flex w-full max-w-2xl items-center justify-center p-4 sm:p-8">
-                        <p className="text-xs text-gray-600 sm:text-sm">{devices.length === 0 ? "No devices found for your account." : "Please select a device."}</p>
+                        <p className="text-xs text-gray-600 sm:text-sm">
+                            {devices.length === 0 ? "No devices found for your account." : "Please select a device."}
+                        </p>
                     </div>
                 )}
 

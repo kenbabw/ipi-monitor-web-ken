@@ -67,7 +67,7 @@ export function HomeLoginPage() {
                 {/* Main Content */}
                 <div className="flex flex-1 flex-col items-center justify-center gap-6 px-4 py-4 sm:gap-[40px] sm:px-6 sm:py-8">
                     {/* Welcome Title */}
-                    <h1 className="whitespace-pre text-2xl font-bold not-italic leading-[normal] text-[#1c78bf] sm:text-[32px]" data-node-id="24:15">
+                    <h1 className="text-2xl leading-[normal] font-bold whitespace-pre text-[#1c78bf] not-italic sm:text-[32px]" data-node-id="24:15">
                         Welcome to IPI Monitor!
                     </h1>
 
@@ -102,7 +102,7 @@ export function HomeLoginPage() {
                                 <button
                                     type="button"
                                     onClick={handleForgotPassword}
-                                    className="text-[10px] font-medium not-italic leading-[normal] text-[#aeaeae] transition-colors hover:text-[#1c78bf] sm:text-[12px]"
+                                    className="text-[10px] leading-[normal] font-medium text-[#aeaeae] not-italic transition-colors hover:text-[#1c78bf] sm:text-[12px]"
                                     data-node-id="24:20"
                                 >
                                     Forgot your password?
@@ -122,7 +122,7 @@ export function HomeLoginPage() {
                             data-name="Login Button"
                             data-node-id="69:22"
                         >
-                            <span className="whitespace-pre text-lg font-bold not-italic leading-[normal] text-white sm:text-[20px]">
+                            <span className="text-lg leading-[normal] font-bold whitespace-pre text-white not-italic sm:text-[20px]">
                                 {isSubmitting ? (isSignUp ? "Creating Account..." : "Signing In...") : isSignUp ? "Create Account" : "Login"}
                             </span>
                         </Button>
@@ -130,7 +130,7 @@ export function HomeLoginPage() {
 
                     {/* Account Actions */}
                     <div
-                        className="flex w-full shrink-0 flex-col items-center gap-[16px] text-sm font-medium not-italic leading-[normal] text-[#1c78bf] sm:w-[140px] sm:items-start sm:text-[16px]"
+                        className="flex w-full shrink-0 flex-col items-center gap-[16px] text-sm leading-[normal] font-medium text-[#1c78bf] not-italic sm:w-[140px] sm:items-start sm:text-[16px]"
                         data-name="Account/Guest"
                         data-node-id="25:10"
                     >

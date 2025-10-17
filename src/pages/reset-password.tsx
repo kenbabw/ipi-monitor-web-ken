@@ -60,7 +60,7 @@ export function ResetPassword() {
 
                     {/* Title and Description */}
                     <div className="text-center">
-                        <h1 className="mb-3 text-2xl font-bold not-italic leading-[normal] text-black sm:text-[32px]">Forgot password?</h1>
+                        <h1 className="mb-3 text-2xl leading-[normal] font-bold text-black not-italic sm:text-[32px]">Forgot password?</h1>
                         <p className="text-xs text-gray-600 sm:text-sm">No worries, we'll send you reset instructions.</p>
                     </div>
 
@@ -92,7 +92,7 @@ export function ResetPassword() {
                                     backgroundImage: "linear-gradient(90deg, rgb(255, 155, 0) 0%, rgb(255, 155, 0) 100%)",
                                 }}
                             >
-                                <span className="whitespace-pre text-lg font-bold not-italic leading-[normal] text-white sm:text-[20px]">
+                                <span className="text-lg leading-[normal] font-bold whitespace-pre text-white not-italic sm:text-[20px]">
                                     {isSubmitting ? "Sending..." : "Reset password"}
                                 </span>
                             </Button>
