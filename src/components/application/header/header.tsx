@@ -7,12 +7,12 @@ interface HeaderProps {
 export function Header({ className }: HeaderProps) {
     return (
         <header className={className} data-name="Header" data-node-id="89:212">
-            <div className="relative flex w-full shrink-0 content-stretch items-end justify-between" data-name="Logo/Phone" data-node-id="I89:212;68:16">
+            <div className="relative flex w-full shrink-0 content-stretch items-center justify-between" data-name="Logo/Phone" data-node-id="I89:212;68:16">
                 <a
                     href="https://www.infopowerapps.com"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="relative flex shrink-0 content-stretch items-end gap-[16px] transition-opacity hover:opacity-80"
+                    className="relative flex shrink-0 content-stretch items-center gap-[16px] transition-opacity hover:opacity-80"
                     data-name="Logo/Company Name"
                     data-node-id="I89:212;68:14"
                 >

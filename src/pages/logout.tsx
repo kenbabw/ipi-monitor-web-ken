@@ -16,14 +16,14 @@ export function Logout() {
             try {
                 await signOut();
                 // Wait a bit to ensure the auth state has propagated
-                await new Promise(resolve => setTimeout(resolve, 500));
+                await new Promise((resolve) => setTimeout(resolve, 500));
             } catch (err) {
                 console.error("Error during logout:", err);
             } finally {
                 setIsLoggingOut(false);
             }
         };
-        
+
         performLogout();
     }, [signOut]);
 
