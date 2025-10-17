@@ -225,8 +225,9 @@ export function ChangePassword() {
                                         className="w-full"
                                     />
                                     <p className="text-xs text-gray-600">
-                                        Password must be at least 8 characters long with one uppercase letter, one lowercase letter, one number, and one special
-                                        character.
+                                        Must be 8+ characters with uppercase, lowercase,
+                                        <br />
+                                        number, and special character.
                                     </p>
                                 </div>
 
