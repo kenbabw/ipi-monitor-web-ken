@@ -7,7 +7,7 @@ import { useSupabase } from "@/providers/supabase-provider";
 
 export function Logout() {
     const navigate = useNavigate();
-    const { signOut, user } = useSupabase();
+    const { signOut } = useSupabase();
     const [isLoggingOut, setIsLoggingOut] = useState(true);
     const [logoutAttempted, setLogoutAttempted] = useState(false);
 
@@ -20,7 +20,7 @@ export function Logout() {
             try {
                 await signOut();
                 // Give a moment for the auth state to update
-                await new Promise((resolve) => setTimeout(resolve, 1000));
+                await new Promise((resolve) => setTimeout(resolve, 500));
             } catch (err) {
                 console.error("Error during logout:", err);
             } finally {
@@ -35,8 +35,8 @@ export function Logout() {
         navigate("/login");
     };
 
-    // Show loading state while logging out OR if user still exists after logout attempt
-    if (isLoggingOut || (logoutAttempted && user)) {
+    // Show loading state while logging out
+    if (isLoggingOut) {
         return (
             <div className="flex min-h-screen items-center justify-center bg-white">
                 <div className="text-[#1c78bf]">Logging out...</div>
