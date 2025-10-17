@@ -175,8 +175,8 @@ export function ChangePassword() {
                 {/* Main Content */}
                 <div className="flex flex-1 flex-col items-center justify-start gap-4 px-4 py-4 sm:gap-6 sm:px-6 sm:py-6 md:justify-center">
                     {/* Icon */}
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full border-4 border-gray-50 sm:h-12 sm:w-12 sm:border-8">
-                        <svg className="h-5 w-5 text-gray-600 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full border-4 border-gray-50 sm:h-10 sm:w-10 sm:border-6">
+                        <svg className="h-4 w-4 text-gray-600 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
@@ -188,7 +188,7 @@ export function ChangePassword() {
 
                     {/* Title and Description */}
                     <div className="text-center">
-                        <h1 className="mb-2 text-2xl leading-[normal] font-bold text-black not-italic sm:text-[32px]">Set new password</h1>
+                        <h1 className="mb-2 text-xl leading-[normal] font-bold text-black not-italic sm:text-2xl">Set new password</h1>
                         <p className="text-xs text-gray-600 sm:text-sm">Your new password must be different to previously used passwords.</p>
                     </div>
 
