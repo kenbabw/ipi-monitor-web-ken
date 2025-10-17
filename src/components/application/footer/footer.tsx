@@ -19,7 +19,7 @@ export function Footer({ className }: FooterProps) {
             />
 
             <div
-                className="relative flex w-full shrink-0 flex-col content-stretch items-center gap-4 px-2 py-4 sm:flex-row sm:gap-8"
+                className="relative flex w-full shrink-0 flex-col content-stretch items-center gap-4 px-2 py-2 sm:flex-row sm:gap-8"
                 data-name="Footer Content"
                 data-node-id="84:76"
             >
