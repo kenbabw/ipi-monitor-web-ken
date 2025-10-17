@@ -262,23 +262,27 @@ const Chart = () => {
                 <Header className="relative box-border flex w-full shrink-0 flex-col content-stretch items-start justify-between bg-white px-[8px] py-[8px]" />
 
                 {/* Main Content */}
-                <div className="flex w-full flex-1 flex-col px-8 py-8">
+                <div className="flex w-full flex-1 flex-col px-4 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-8">
                     {/* Page header section */}
                     <div className="w-full">
-                        <div className="mb-6">
+                        <div className="mb-4 sm:mb-6">
                             {/* Welcome and action buttons */}
-                            <div className="mb-5 flex items-center justify-between">
+                            <div className="mb-4 flex flex-col gap-4 sm:mb-5 sm:flex-row sm:items-center sm:justify-between">
                                 <div className="flex flex-col items-start">
-                                    <p className="text-[20px] leading-[30px] font-semibold text-[#181d27]">Welcome back, {userName}</p>
+                                    <p className="text-lg font-semibold text-[#181d27] sm:text-xl">Welcome back, {userName}</p>
                                 </div>
-                                <div className="flex items-center gap-3">
-                                    <Button color="secondary" onClick={() => navigate("/device-information")} className="px-4 py-2 text-sm font-semibold">
+                                <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                                    <Button
+                                        color="secondary"
+                                        onClick={() => navigate("/device-information")}
+                                        className="px-3 py-2 text-sm font-semibold sm:px-4"
+                                    >
                                         Device Info
                                     </Button>
-                                    <Button color="secondary" className="px-4 py-2 text-sm font-semibold">
+                                    <Button color="secondary" className="px-3 py-2 text-sm font-semibold sm:px-4">
                                         Charts
                                     </Button>
-                                    <Button color="secondary" onClick={handleLogout} className="px-4 py-2 text-sm font-semibold">
+                                    <Button color="secondary" onClick={handleLogout} className="px-3 py-2 text-sm font-semibold sm:px-4">
                                         Logout
                                     </Button>
                                 </div>
@@ -307,16 +311,16 @@ const Chart = () => {
                         </div>
 
                         {/* Date picker */}
-                        <div className="mb-6 flex items-center justify-start">
-                            <div className="flex items-center gap-4">
+                        <div className="mb-4 flex items-center justify-start sm:mb-6">
+                            <div className="flex w-full flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-4">
                                 {/* Date Range Picker */}
                                 <DateRangePicker value={dateRange} onChange={setDateRange} onApply={handleDateRangeApply} isDisabled={!selectedDevice} />
-                                {!selectedDevice && <span className="text-sm text-gray-500 italic">Select a device to enable date filtering</span>}
+                                {!selectedDevice && <span className="text-xs text-gray-500 italic sm:text-sm">Select a device to enable date filtering</span>}
                             </div>
                         </div>
 
                         {/* Chart Type Selections */}
-                        <div className="mb-6 flex items-center gap-8">
+                        <div className="mb-4 flex flex-wrap items-center gap-4 sm:mb-6 sm:gap-6 lg:gap-8">
                             <div className="flex items-center gap-2">
                                 <Checkbox
                                     isSelected={showTemperature}
@@ -355,7 +359,7 @@ const Chart = () => {
 
                         {/* Message when checkboxes are disabled */}
                         {!canSelectCharts && (
-                            <div className="mb-4 text-sm text-gray-500 italic">
+                            <div className="mb-3 text-xs text-gray-500 italic sm:mb-4 sm:text-sm">
                                 {!selectedDevice && !dateRange
                                     ? "Select a device and date range to enable chart options"
                                     : !selectedDevice
@@ -366,22 +370,22 @@ const Chart = () => {
 
                         {/* Chart Section */}
                         {showTemperature && (
-                            <div className="rounded-xl border border-gray-200 bg-gray-50 p-5">
-                                <div className="mb-4">
+                            <div className="rounded-xl border border-gray-200 bg-gray-50 p-3 sm:p-4 lg:p-5">
+                                <div className="mb-3 sm:mb-4">
                                     <h2 className="text-sm font-semibold text-gray-900">Temperature</h2>
                                 </div>
 
-                                <div className="rounded-xl border border-gray-200 bg-white p-5">
+                                <div className="rounded-xl border border-gray-200 bg-white p-3 sm:p-4 lg:p-5">
                                     {loading ? (
-                                        <div className="flex h-80 items-center justify-center">
-                                            <div className="text-gray-500">Loading chart data...</div>
+                                        <div className="flex h-64 items-center justify-center sm:h-80">
+                                            <div className="text-xs text-gray-500 sm:text-sm">Loading chart data...</div>
                                         </div>
                                     ) : chartData.length === 0 ? (
-                                        <div className="flex h-80 items-center justify-center">
-                                            <div className="text-gray-500">No Temperature data available for the selected time period</div>
+                                        <div className="flex h-64 items-center justify-center sm:h-80">
+                                            <div className="text-xs text-gray-500 sm:text-sm">No Temperature data available for the selected time period</div>
                                         </div>
                                     ) : (
-                                        <div className="h-80">
+                                        <div className="h-64 sm:h-80">
                                             <ResponsiveContainer width="100%" height="100%">
                                                 <LineChart data={chartData}>
                                                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
@@ -459,22 +463,22 @@ const Chart = () => {
 
                         {/* Humidity Chart Section */}
                         {showHumidity && (
-                            <div className="mt-6 rounded-xl border border-gray-200 bg-gray-50 p-5">
-                                <div className="mb-4">
+                            <div className="mt-4 rounded-xl border border-gray-200 bg-gray-50 p-3 sm:mt-6 sm:p-4 lg:p-5">
+                                <div className="mb-3 sm:mb-4">
                                     <h2 className="text-sm font-semibold text-gray-900">Humidity</h2>
                                 </div>
 
-                                <div className="rounded-xl border border-gray-200 bg-white p-5">
+                                <div className="rounded-xl border border-gray-200 bg-white p-3 sm:p-4 lg:p-5">
                                     {loading ? (
-                                        <div className="flex h-80 items-center justify-center">
-                                            <div className="text-gray-500">Loading humidity data...</div>
+                                        <div className="flex h-64 items-center justify-center sm:h-80">
+                                            <div className="text-xs text-gray-500 sm:text-sm">Loading humidity data...</div>
                                         </div>
                                     ) : chartData.length === 0 ? (
-                                        <div className="flex h-80 items-center justify-center">
-                                            <div className="text-gray-500">No Humidity data available for the selected time period</div>
+                                        <div className="flex h-64 items-center justify-center sm:h-80">
+                                            <div className="text-xs text-gray-500 sm:text-sm">No Humidity data available for the selected time period</div>
                                         </div>
                                     ) : (
-                                        <div className="h-80">
+                                        <div className="h-64 sm:h-80">
                                             <ResponsiveContainer width="100%" height="100%">
                                                 <LineChart data={chartData}>
                                                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
@@ -552,22 +556,22 @@ const Chart = () => {
 
                         {/* Dew Point Chart Section */}
                         {showDewPoint && (
-                            <div className="mt-6 rounded-xl border border-gray-200 bg-gray-50 p-5">
-                                <div className="mb-4">
+                            <div className="mt-4 rounded-xl border border-gray-200 bg-gray-50 p-3 sm:mt-6 sm:p-4 lg:p-5">
+                                <div className="mb-3 sm:mb-4">
                                     <h2 className="text-sm font-semibold text-gray-900">Dew Point</h2>
                                 </div>
 
-                                <div className="rounded-xl border border-gray-200 bg-white p-5">
+                                <div className="rounded-xl border border-gray-200 bg-white p-3 sm:p-4 lg:p-5">
                                     {loading ? (
-                                        <div className="flex h-80 items-center justify-center">
-                                            <div className="text-gray-500">Loading dew point data...</div>
+                                        <div className="flex h-64 items-center justify-center sm:h-80">
+                                            <div className="text-xs text-gray-500 sm:text-sm">Loading dew point data...</div>
                                         </div>
                                     ) : chartData.length === 0 ? (
-                                        <div className="flex h-80 items-center justify-center">
-                                            <div className="text-gray-500">No Dew Point data available for the selected time period</div>
+                                        <div className="flex h-64 items-center justify-center sm:h-80">
+                                            <div className="text-xs text-gray-500 sm:text-sm">No Dew Point data available for the selected time period</div>
                                         </div>
                                     ) : (
-                                        <div className="h-80">
+                                        <div className="h-64 sm:h-80">
                                             <ResponsiveContainer width="100%" height="100%">
                                                 <LineChart data={chartData}>
                                                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
