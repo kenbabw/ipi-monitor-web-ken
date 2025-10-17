@@ -101,7 +101,7 @@ export function ResetPassword() {
                             <button
                                 type="button"
                                 onClick={handleBackToLogin}
-                                className="flex items-center gap-2 text-xs font-semibold text-gray-600 transition-colors hover:text-gray-900 sm:text-[14px]"
+                                className="flex items-center gap-2 text-xs font-semibold text-gray-600 transition-colors hover:text-[#1c78bf] hover:underline sm:text-[16px]"
                             >
                                 <svg className="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -119,7 +119,7 @@ export function ResetPassword() {
                             <button
                                 type="button"
                                 onClick={handleBackToLogin}
-                                className="flex items-center gap-2 text-xs font-semibold text-gray-600 transition-colors hover:text-gray-900 sm:text-[14px]"
+                                className="flex items-center gap-2 text-xs font-semibold text-gray-600 transition-colors hover:text-[#1c78bf] hover:underline sm:text-[16px]"
                             >
                                 <svg className="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
