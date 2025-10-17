@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { Footer } from "@/components/application/footer/footer";
 import { Header } from "@/components/application/header/header";
@@ -7,18 +7,38 @@ import { useSupabase } from "@/providers/supabase-provider";
 
 export function Logout() {
     const navigate = useNavigate();
-    const { signOut } = useSupabase();
+    const { signOut, user } = useSupabase();
+    const [isLoggingOut, setIsLoggingOut] = useState(true);
 
     // Ensure user is signed out when this page loads
     useEffect(() => {
-        signOut().catch((err) => {
-            console.error("Error during logout:", err);
-        });
+        const performLogout = async () => {
+            try {
+                await signOut();
+                // Wait a bit to ensure the auth state has propagated
+                await new Promise(resolve => setTimeout(resolve, 500));
+            } catch (err) {
+                console.error("Error during logout:", err);
+            } finally {
+                setIsLoggingOut(false);
+            }
+        };
+        
+        performLogout();
     }, [signOut]);
 
     const handleLoginClick = () => {
         navigate("/login");
     };
+
+    // Show loading state while logging out
+    if (isLoggingOut || user) {
+        return (
+            <div className="flex min-h-screen items-center justify-center bg-white">
+                <div className="text-[#1c78bf]">Logging out...</div>
+            </div>
+        );
+    }
 
     return (
         <div className="relative min-h-screen border border-solid border-black bg-white" data-name="Logout">
