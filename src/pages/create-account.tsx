@@ -118,14 +118,14 @@ export function CreateAccount() {
                 <Header className="relative box-border flex w-full shrink-0 flex-col content-stretch items-start justify-between bg-white px-[8px] py-[8px]" />
 
                 {/* Main Content */}
-                <div className="flex flex-1 flex-col items-center justify-center gap-2 px-2 py-2">
+                <div className="flex flex-1 flex-col items-center justify-center gap-2 px-4 py-4 sm:px-6 sm:py-6">
                     {/* Title */}
-                    <h1 className="text-[32px] leading-[normal] font-bold text-[#1c78bf] not-italic">Create your Account</h1>
+                    <h1 className="text-2xl font-bold not-italic leading-[normal] text-[#1c78bf] sm:text-[32px]">Create your Account</h1>
 
                     {/* Create Account Form */}
                     <form onSubmit={handleSubmit} className="flex w-full max-w-lg flex-col gap-3">
                         {/* Error Message */}
-                        {error && <div className="rounded border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div>}
+                        {error && <div className="rounded border border-red-200 bg-red-50 p-3 text-xs text-red-700 sm:text-sm">{error}</div>}
 
                         {/* First Name Field */}
                         <Input
@@ -193,12 +193,12 @@ export function CreateAccount() {
                             type="submit"
                             isLoading={isSubmitting}
                             isDisabled={isSubmitting}
-                            className="mt-4 flex h-[52px] items-center justify-center gap-[10px] rounded-[12px] px-[16px] py-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
+                            className="mt-4 flex h-[48px] items-center justify-center gap-[10px] rounded-[12px] px-[16px] py-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] sm:h-[52px]"
                             style={{
                                 backgroundImage: "linear-gradient(90deg, rgb(255, 155, 0) 0%, rgb(255, 155, 0) 100%)",
                             }}
                         >
-                            <span className="text-[20px] leading-[normal] font-bold whitespace-pre text-white not-italic">
+                            <span className="whitespace-pre text-lg font-bold not-italic leading-[normal] text-white sm:text-[20px]">
                                 {isSubmitting ? "Creating Account..." : "Create my account"}
                             </span>
                         </Button>
@@ -208,7 +208,7 @@ export function CreateAccount() {
                             <button
                                 type="button"
                                 onClick={handleAlreadyHaveAccount}
-                                className="text-[16px] leading-[normal] font-medium text-[#1c78bf] not-italic hover:underline"
+                                className="text-sm font-medium not-italic leading-[normal] text-[#1c78bf] hover:underline sm:text-[16px]"
                             >
                                 I already have an account
                             </button>

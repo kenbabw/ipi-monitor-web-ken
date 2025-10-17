@@ -33,31 +33,31 @@ function MeasurementCard({ measurement }: MeasurementCardProps) {
     };
 
     return (
-        <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+        <div className="rounded-lg border border-gray-200 bg-white p-3 shadow-sm sm:p-4">
             <div className="mb-3 flex items-start justify-between">
-                <div className="text-sm text-gray-500">{formatDate(measurement.measurement_date_time)}</div>
-                <div className="text-xs text-gray-400">#{measurement.measurement_sk}</div>
+                <div className="text-xs text-gray-500 sm:text-sm">{formatDate(measurement.measurement_date_time)}</div>
+                <div className="text-[10px] text-gray-400 sm:text-xs">#{measurement.measurement_sk}</div>
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-3 gap-2 sm:gap-4">
                 <div className="text-center">
-                    <div className={`text-2xl font-bold ${getTemperatureColor(measurement.measurement_temperature, measurement.device_temperature_unit)}`}>
+                    <div className={`text-lg font-bold sm:text-2xl ${getTemperatureColor(measurement.measurement_temperature, measurement.device_temperature_unit)}`}>
                         {measurement.measurement_temperature.toFixed(1)}°
                     </div>
-                    <div className="text-xs text-gray-500">Temperature</div>
-                    <div className="text-xs text-gray-400">{measurement.device_temperature_unit}</div>
+                    <div className="text-[10px] text-gray-500 sm:text-xs">Temperature</div>
+                    <div className="text-[9px] text-gray-400 sm:text-xs">{measurement.device_temperature_unit}</div>
                 </div>
 
                 <div className="text-center">
-                    <div className={`text-2xl font-bold ${getHumidityColor(measurement.measurement_humidity)}`}>
+                    <div className={`text-lg font-bold sm:text-2xl ${getHumidityColor(measurement.measurement_humidity)}`}>
                         {measurement.measurement_humidity.toFixed(1)}%
                     </div>
-                    <div className="text-xs text-gray-500">Humidity</div>
+                    <div className="text-[10px] text-gray-500 sm:text-xs">Humidity</div>
                 </div>
 
                 <div className="text-center">
-                    <div className="text-2xl font-bold text-blue-600">{measurement.measurement_dew_point.toFixed(1)}°</div>
-                    <div className="text-xs text-gray-500">Dew Point</div>
+                    <div className="text-lg font-bold text-blue-600 sm:text-2xl">{measurement.measurement_dew_point.toFixed(1)}°</div>
+                    <div className="text-[10px] text-gray-500 sm:text-xs">Dew Point</div>
                 </div>
             </div>
         </div>
@@ -93,11 +93,11 @@ export function DeviceMeasurements({ deviceId, userId, deviceName }: DeviceMeasu
     const latestMeasurement = measurements[0];
 
     return (
-        <div className="space-y-6">
-            <div className="flex items-center justify-between">
+        <div className="space-y-4 sm:space-y-6">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h2 className="text-xl font-semibold text-gray-900">Measurements for {deviceName}</h2>
-                    <p className="text-sm text-gray-600">Showing latest {measurements.length} readings</p>
+                    <h2 className="text-lg font-semibold text-gray-900 sm:text-xl">Measurements for {deviceName}</h2>
+                    <p className="text-xs text-gray-600 sm:text-sm">Showing latest {measurements.length} readings</p>
                 </div>
                 <div className="flex space-x-2">
                     <Button onClick={() => setLimit(limit === 20 ? 50 : 20)} size="sm" color="secondary">
@@ -107,21 +107,21 @@ export function DeviceMeasurements({ deviceId, userId, deviceName }: DeviceMeasu
             </div>
 
             {latestMeasurement && (
-                <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
-                    <h3 className="mb-3 text-lg font-medium text-blue-900">Latest Reading</h3>
+                <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 sm:p-4">
+                    <h3 className="mb-3 text-base font-medium text-blue-900 sm:text-lg">Latest Reading</h3>
                     <MeasurementCard measurement={latestMeasurement} />
                 </div>
             )}
 
             {measurements.length === 0 ? (
-                <div className="py-8 text-center">
-                    <div className="mb-4 text-gray-500">No measurements found for this device</div>
+                <div className="py-6 text-center sm:py-8">
+                    <div className="mb-4 text-xs text-gray-500 sm:text-sm">No measurements found for this device</div>
                     <Button color="primary">Add Test Data</Button>
                 </div>
             ) : (
                 <div className="space-y-3">
-                    <h3 className="text-lg font-medium text-gray-900">Historical Readings ({measurements.length})</h3>
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <h3 className="text-base font-medium text-gray-900 sm:text-lg">Historical Readings ({measurements.length})</h3>
+                    <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
                         {measurements.slice(1).map((measurement) => (
                             <MeasurementCard key={measurement.measurement_sk} measurement={measurement} />
                         ))}
@@ -190,15 +190,15 @@ export function RecentMeasurementsDashboard() {
     );
 
     return (
-        <div className="mx-auto max-w-6xl space-y-6 p-6">
-            <div className="flex items-center justify-between">
+        <div className="mx-auto max-w-6xl space-y-4 p-4 sm:space-y-6 sm:p-6">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Recent Measurements</h1>
-                    <p className="text-gray-600">
+                    <h1 className="text-xl font-bold text-gray-900 sm:text-2xl">Recent Measurements</h1>
+                    <p className="text-xs text-gray-600 sm:text-sm">
                         Last {hoursBack} hours • {measurements.length} total readings
                     </p>
                 </div>
-                <div className="flex space-x-2">
+                <div className="flex flex-wrap gap-2">
                     <Button onClick={() => setHoursBack(hoursBack === 24 ? 48 : 24)} size="sm" color="secondary">
                         {hoursBack === 24 ? "48h" : "24h"}
                     </Button>
@@ -209,27 +209,27 @@ export function RecentMeasurementsDashboard() {
             </div>
 
             {measurements.length === 0 ? (
-                <div className="py-12 text-center">
-                    <div className="mb-4 text-gray-500">No measurements found in the last {hoursBack} hours</div>
+                <div className="py-8 text-center sm:py-12">
+                    <div className="mb-4 text-xs text-gray-500 sm:text-sm">No measurements found in the last {hoursBack} hours</div>
                     <Button onClick={addTestMeasurement} color="primary">
                         Add Test Measurement
                     </Button>
                 </div>
             ) : (
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                     {Object.entries(measurementsByDevice).map(([deviceId, deviceMeasurements]) => (
-                        <div key={deviceId} className="rounded-lg bg-gray-50 p-6">
-                            <h3 className="mb-4 text-lg font-medium text-gray-900">
+                        <div key={deviceId} className="rounded-lg bg-gray-50 p-4 sm:p-6">
+                            <h3 className="mb-4 text-base font-medium text-gray-900 sm:text-lg">
                                 Device: {deviceId} ({deviceMeasurements.length} readings)
                             </h3>
-                            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                            <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-3">
                                 {deviceMeasurements.slice(0, 6).map((measurement) => (
                                     <MeasurementCard key={measurement.measurement_sk} measurement={measurement} />
                                 ))}
                             </div>
                             {deviceMeasurements.length > 6 && (
                                 <div className="mt-4 text-center">
-                                    <div className="text-sm text-gray-500">+{deviceMeasurements.length - 6} more readings</div>
+                                    <div className="text-xs text-gray-500 sm:text-sm">+{deviceMeasurements.length - 6} more readings</div>
                                 </div>
                             )}
                         </div>
@@ -237,34 +237,34 @@ export function RecentMeasurementsDashboard() {
                 </div>
             )}
 
-            <div className="rounded-lg bg-white p-6 shadow-md">
-                <h2 className="mb-4 text-lg font-semibold">Measurement Statistics</h2>
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+            <div className="rounded-lg bg-white p-4 shadow-md sm:p-6">
+                <h2 className="mb-4 text-base font-semibold sm:text-lg">Measurement Statistics</h2>
+                <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
                     <div className="text-center">
-                        <div className="text-2xl font-bold text-blue-600">{measurements.length}</div>
-                        <div className="text-sm text-gray-500">Total Readings</div>
+                        <div className="text-xl font-bold text-blue-600 sm:text-2xl">{measurements.length}</div>
+                        <div className="text-[10px] text-gray-500 sm:text-sm">Total Readings</div>
                     </div>
                     <div className="text-center">
-                        <div className="text-2xl font-bold text-green-600">{Object.keys(measurementsByDevice).length}</div>
-                        <div className="text-sm text-gray-500">Active Devices</div>
+                        <div className="text-xl font-bold text-green-600 sm:text-2xl">{Object.keys(measurementsByDevice).length}</div>
+                        <div className="text-[10px] text-gray-500 sm:text-sm">Active Devices</div>
                     </div>
                     <div className="text-center">
-                        <div className="text-2xl font-bold text-orange-600">
+                        <div className="text-xl font-bold text-orange-600 sm:text-2xl">
                             {measurements.length > 0
                                 ? (measurements.reduce((sum, m) => sum + m.measurement_temperature, 0) / measurements.length).toFixed(1)
                                 : "0"}
                             °
                         </div>
-                        <div className="text-sm text-gray-500">Avg Temperature</div>
+                        <div className="text-[10px] text-gray-500 sm:text-sm">Avg Temperature</div>
                     </div>
                     <div className="text-center">
-                        <div className="text-2xl font-bold text-purple-600">
+                        <div className="text-xl font-bold text-purple-600 sm:text-2xl">
                             {measurements.length > 0
                                 ? (measurements.reduce((sum, m) => sum + m.measurement_humidity, 0) / measurements.length).toFixed(1)
                                 : "0"}
                             %
                         </div>
-                        <div className="text-sm text-gray-500">Avg Humidity</div>
+                        <div className="text-[10px] text-gray-500 sm:text-sm">Avg Humidity</div>
                     </div>
                 </div>
             </div>

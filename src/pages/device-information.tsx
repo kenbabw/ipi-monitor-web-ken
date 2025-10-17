@@ -117,23 +117,23 @@ export const DeviceInformation = () => {
                 <Header className="relative box-border flex w-full shrink-0 flex-col content-stretch items-start justify-between bg-white px-[8px] py-[8px]" />
 
                 {/* Main Content */}
-                <div className="flex w-full flex-1 flex-col px-8 py-8">
+                <div className="flex w-full flex-1 flex-col px-4 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-8">
                     {/* Page header section */}
                     <div className="w-full">
-                        <div className="mb-6">
+                        <div className="mb-4 sm:mb-6">
                             {/* Welcome and action buttons */}
-                            <div className="flex w-full flex-wrap items-start justify-between gap-[5px]">
+                            <div className="flex w-full flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between">
                                 <div className="flex flex-col items-start">
-                                    <p className="text-[20px] leading-[30px] font-semibold text-[#181d27]">Welcome back, {userName}</p>
+                                    <p className="text-lg font-semibold leading-[30px] text-[#181d27] sm:text-xl">Welcome back, {userName}</p>
                                 </div>
-                                <div className="flex items-center gap-3">
-                                    <Button color="secondary" className="px-4 py-2 text-sm font-semibold">
+                                <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                                    <Button color="secondary" className="px-3 py-2 text-xs font-semibold sm:px-4 sm:text-sm">
                                         Device Info
                                     </Button>
-                                    <Button color="secondary" onClick={handleCharts} className="px-4 py-2 text-sm font-semibold">
+                                    <Button color="secondary" onClick={handleCharts} className="px-3 py-2 text-xs font-semibold sm:px-4 sm:text-sm">
                                         Charts
                                     </Button>
-                                    <Button color="secondary" onClick={handleLogout} className="px-4 py-2 text-sm font-semibold">
+                                    <Button color="secondary" onClick={handleLogout} className="px-3 py-2 text-xs font-semibold sm:px-4 sm:text-sm">
                                         Logout
                                     </Button>
                                 </div>
@@ -148,7 +148,7 @@ export const DeviceInformation = () => {
                             placeholder="Select Device"
                             selectedKey={selectedDevice?.device_id || null}
                             onSelectionChange={(key) => handleDeviceSelect(key as string)}
-                            className="w-full max-w-[300px]"
+                            className="w-full sm:max-w-[300px]"
                             items={devices.map((device) => ({
                                 id: device.device_id,
                                 label: device.user_device_name || device.device_name,
@@ -164,12 +164,12 @@ export const DeviceInformation = () => {
                 </div>
 
                 {/* Error Message */}
-                {error && <div className="w-full max-w-7xl rounded border border-red-200 bg-red-50 p-4 text-red-700">{error}</div>}
+                {error && <div className="w-full max-w-7xl rounded border border-red-200 bg-red-50 p-3 text-xs text-red-700 sm:p-4 sm:text-sm">{error}</div>}
 
                 {/* Device Information Form */}
                 {selectedDevice ? (
                     <div className="flex w-full max-w-6xl flex-col items-start gap-[1px] [&_label]:!text-[#1c78bf]">
-                        <div className="flex w-full gap-[16px]">
+                        <div className="flex w-full flex-col gap-4 lg:flex-row lg:gap-[16px]">
                             {/* First Column - 4 fields */}
                             <div className="flex flex-1 flex-col items-start gap-2">
                                 <Input
@@ -267,8 +267,8 @@ export const DeviceInformation = () => {
                         </div>
                     </div>
                 ) : (
-                    <div className="flex w-full max-w-2xl items-center justify-center p-8">
-                        <p className="text-gray-600">{devices.length === 0 ? "No devices found for your account." : "Please select a device."}</p>
+                    <div className="flex w-full max-w-2xl items-center justify-center p-4 sm:p-8">
+                        <p className="text-xs text-gray-600 sm:text-sm">{devices.length === 0 ? "No devices found for your account." : "Please select a device."}</p>
                     </div>
                 )}
 

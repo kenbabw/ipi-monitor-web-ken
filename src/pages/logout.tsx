@@ -26,21 +26,21 @@ export function Logout() {
                 <Header className="relative box-border flex w-full shrink-0 flex-col content-stretch items-start justify-between bg-white px-[8px] py-[8px]" />
 
                 {/* Main Content */}
-                <div className="flex flex-1 flex-col items-center justify-center gap-[40px] px-4 py-8">
+                <div className="flex flex-1 flex-col items-center justify-center gap-6 px-4 py-4 sm:gap-[40px] sm:px-6 sm:py-8">
                     {/* Success Message */}
-                    <h1 className="text-center text-[32px] leading-[normal] font-bold whitespace-pre text-[#1c78bf] not-italic">
+                    <h1 className="whitespace-pre text-center text-2xl font-bold not-italic leading-[normal] text-[#1c78bf] sm:text-[32px]">
                         You have successfully logged out of IPI Monitor!
                     </h1>
 
                     {/* Login Button */}
                     <Button
                         onClick={handleLoginClick}
-                        className="box-border flex h-[52px] items-center justify-center gap-[10px] rounded-[12px] px-[16px] py-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)]"
+                        className="box-border flex h-[48px] items-center justify-center gap-[10px] rounded-[12px] px-[16px] py-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] sm:h-[52px]"
                         style={{
                             backgroundImage: "linear-gradient(90deg, rgb(255, 155, 0) 0%, rgb(255, 155, 0) 100%)",
                         }}
                     >
-                        <span className="text-[20px] leading-[normal] font-bold whitespace-pre text-white not-italic">Login</span>
+                        <span className="whitespace-pre text-lg font-bold not-italic leading-[normal] text-white sm:text-[20px]">Login</span>
                     </Button>
                 </div>
 
