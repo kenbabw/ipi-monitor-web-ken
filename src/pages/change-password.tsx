@@ -224,7 +224,10 @@ export function ChangePassword() {
                                         placeholder="Enter your password"
                                         className="w-full"
                                     />
-                                    <p className="text-xs text-gray-600">Must be 8+ chars with uppercase, lowercase, number, and special character.</p>
+                                    <p className="text-xs text-gray-600">
+                                        Password must be at least 8 characters long with one uppercase letter, one lowercase letter, one number, and one special
+                                        character
+                                    </p>
                                 </div>
 
                                 {/* Confirm Password Field */}
