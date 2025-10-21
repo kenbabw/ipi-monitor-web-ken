@@ -14,9 +14,19 @@ export function HomeLoginPage() {
     const [password, setPassword] = useState("");
     const [isSignUp, setIsSignUp] = useState(location.state?.isSignUp || false);
     const [error, setError] = useState<string | null>(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Redirect if user is already logged in
+    // Check for success message from sessionStorage
+    const storedMessage = sessionStorage.getItem("accountCreatedMessage");
+    const [successMessage, setSuccessMessage] = useState<string | null>(storedMessage);
+
+    // Clear the message from sessionStorage after reading it
+    useEffect(() => {
+        if (storedMessage) {
+            sessionStorage.removeItem("accountCreatedMessage");
+        }
+    }, [storedMessage]);
+
+    const [isSubmitting, setIsSubmitting] = useState(false); // Redirect if user is already logged in
     useEffect(() => {
         if (user) {
             const from = location.state?.from?.pathname || "/device-information";
@@ -27,6 +37,7 @@ export function HomeLoginPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
+        setSuccessMessage(null); // Clear success message when form is submitted
         setIsSubmitting(true);
 
         try {
@@ -74,6 +85,11 @@ export function HomeLoginPage() {
                     {/* Login Form */}
                     <form onSubmit={handleSubmit} className="flex flex-col items-center gap-6 sm:gap-[32px]">
                         <div className="flex w-full shrink-0 flex-col items-start gap-[8px] sm:w-[272px]" data-name="Login Input Fields" data-node-id="25:11">
+                            {/* Success Message */}
+                            {successMessage && (
+                                <div className="w-full rounded border border-green-200 bg-green-50 p-3 text-xs text-green-700 sm:text-sm">{successMessage}</div>
+                            )}
+
                             {/* Error Message */}
                             {error && <div className="w-full rounded border border-red-200 bg-red-50 p-3 text-xs text-red-700 sm:text-sm">{error}</div>}
 

@@ -7,7 +7,7 @@ import { Input } from "@/components/base/input/input";
 import { useSupabase } from "@/providers/supabase-provider";
 
 export function CreateAccount() {
-    const { signUpWithProfile, loading, user } = useSupabase();
+    const { signUpWithProfile, signOut, loading, user } = useSupabase();
     const navigate = useNavigate();
     const location = useLocation();
     const [firstName, setFirstName] = useState("");
@@ -21,7 +21,7 @@ export function CreateAccount() {
     // Redirect if user is already logged in
     useEffect(() => {
         if (user) {
-            const from = location.state?.from?.pathname || "/dashboard";
+            const from = location.state?.from?.pathname || "/device-information";
             navigate(from, { replace: true });
         }
     }, [user, navigate, location]);
@@ -88,9 +88,14 @@ export function CreateAccount() {
             if (error) {
                 setError(error.message);
             } else {
-                // Account created successfully
-                // Note: Supabase will send a confirmation email
-                alert("Account created successfully! Please check your email to verify your account.");
+                // Sign out the user so they go to login page
+                await signOut();
+                // Store success message in sessionStorage to survive navigation
+                sessionStorage.setItem(
+                    "accountCreatedMessage",
+                    "Account created successfully! Please check your email to verify your account before logging in.",
+                );
+                // Navigate to login
                 navigate("/login");
             }
         } catch (err) {
@@ -113,111 +118,113 @@ export function CreateAccount() {
     }
 
     return (
-        <div className="relative min-h-screen border border-solid border-black bg-white" data-name="CreateAccount">
-            <div className="relative box-border flex min-h-screen flex-col content-stretch items-center gap-1 px-[20px] py-[4px] md:gap-2">
-                <Header className="relative box-border flex w-full shrink-0 flex-col content-stretch items-start justify-between bg-white px-[8px] py-[8px]" />
+        <>
+            <div className="relative min-h-screen border border-solid border-black bg-white" data-name="CreateAccount">
+                <div className="relative box-border flex min-h-screen flex-col content-stretch items-center gap-1 px-[20px] py-[4px] md:gap-2">
+                    <Header className="relative box-border flex w-full shrink-0 flex-col content-stretch items-start justify-between bg-white px-[8px] py-[8px]" />
 
-                {/* Main Content */}
-                <div className="flex flex-1 flex-col items-center justify-center gap-2 px-4 py-4 sm:px-6 sm:py-6">
-                    {/* Title */}
-                    <h1 className="text-2xl leading-[normal] font-bold text-[#1c78bf] not-italic sm:text-[32px]">Create your Account</h1>
+                    {/* Main Content */}
+                    <div className="flex flex-1 flex-col items-center justify-center gap-2 px-4 py-4 sm:px-6 sm:py-6">
+                        {/* Title */}
+                        <h1 className="text-2xl leading-[normal] font-bold text-[#1c78bf] not-italic sm:text-[32px]">Create your Account</h1>
 
-                    {/* Create Account Form */}
-                    <form onSubmit={handleSubmit} className="flex w-full max-w-lg flex-col gap-3">
-                        {/* Error Message */}
-                        {error && <div className="rounded border border-red-200 bg-red-50 p-3 text-xs text-red-700 sm:text-sm">{error}</div>}
+                        {/* Create Account Form */}
+                        <form onSubmit={handleSubmit} className="flex w-full max-w-lg flex-col gap-3">
+                            {/* Error Message */}
+                            {error && <div className="rounded border border-red-200 bg-red-50 p-3 text-xs text-red-700 sm:text-sm">{error}</div>}
 
-                        {/* First Name Field */}
-                        <Input
-                            type="text"
-                            label="First Name:"
-                            value={firstName}
-                            onChange={(value: string) => setFirstName(value)}
-                            placeholder="Enter your first name"
-                            className="w-full"
-                            isRequired
-                        />
-
-                        {/* Last Name Field */}
-                        <Input
-                            type="text"
-                            label="Last Name:"
-                            value={lastName}
-                            onChange={(value: string) => setLastName(value)}
-                            placeholder="Enter your last name"
-                            className="w-full"
-                            isRequired
-                        />
-
-                        {/* Email Address Field */}
-                        <Input
-                            type="email"
-                            label="Email Address:"
-                            value={email}
-                            onChange={(value: string) => setEmail(value)}
-                            placeholder="Enter your email address"
-                            className="w-full"
-                            isRequired
-                        />
-
-                        {/* Password Field */}
-                        <div className="flex flex-col gap-1">
+                            {/* First Name Field */}
                             <Input
-                                type="password"
-                                label="Password:"
-                                value={password}
-                                onChange={(value: string) => setPassword(value)}
-                                placeholder="Enter your password"
+                                type="text"
+                                label="First Name:"
+                                value={firstName}
+                                onChange={(value: string) => setFirstName(value)}
+                                placeholder="Enter your first name"
                                 className="w-full"
                                 isRequired
                             />
-                            <p className="text-xs text-gray-600">
-                                Password must be at least 8 characters long with one uppercase letter, one lowercase letter, one number, and one special
-                                character.
-                            </p>
-                        </div>
 
-                        {/* Confirm Password Field */}
-                        <Input
-                            type="password"
-                            label="Confirm Password:"
-                            value={confirmPassword}
-                            onChange={(value: string) => setConfirmPassword(value)}
-                            placeholder="Confirm your password"
-                            className="w-full"
-                            isRequired
-                        />
+                            {/* Last Name Field */}
+                            <Input
+                                type="text"
+                                label="Last Name:"
+                                value={lastName}
+                                onChange={(value: string) => setLastName(value)}
+                                placeholder="Enter your last name"
+                                className="w-full"
+                                isRequired
+                            />
 
-                        {/* Create Account Button */}
-                        <Button
-                            type="submit"
-                            isLoading={isSubmitting}
-                            isDisabled={isSubmitting}
-                            className="mt-4 flex h-[48px] items-center justify-center gap-[10px] rounded-[12px] px-[16px] py-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] sm:h-[52px]"
-                            style={{
-                                backgroundImage: "linear-gradient(90deg, rgb(255, 155, 0) 0%, rgb(255, 155, 0) 100%)",
-                            }}
-                        >
-                            <span className="text-lg leading-[normal] font-bold whitespace-pre text-white not-italic sm:text-[20px]">
-                                {isSubmitting ? "Creating Account..." : "Create my account"}
-                            </span>
-                        </Button>
+                            {/* Email Address Field */}
+                            <Input
+                                type="email"
+                                label="Email Address:"
+                                value={email}
+                                onChange={(value: string) => setEmail(value)}
+                                placeholder="Enter your email address"
+                                className="w-full"
+                                isRequired
+                            />
 
-                        {/* Already Have Account Link */}
-                        <div className="text-center">
-                            <button
-                                type="button"
-                                onClick={handleAlreadyHaveAccount}
-                                className="text-sm leading-[normal] font-medium text-[#1c78bf] not-italic hover:underline sm:text-[16px]"
+                            {/* Password Field */}
+                            <div className="flex flex-col gap-1">
+                                <Input
+                                    type="password"
+                                    label="Password:"
+                                    value={password}
+                                    onChange={(value: string) => setPassword(value)}
+                                    placeholder="Enter your password"
+                                    className="w-full"
+                                    isRequired
+                                />
+                                <p className="text-xs text-gray-600">
+                                    Password must be at least 8 characters long with one uppercase letter, one lowercase letter, one number, and one special
+                                    character.
+                                </p>
+                            </div>
+
+                            {/* Confirm Password Field */}
+                            <Input
+                                type="password"
+                                label="Confirm Password:"
+                                value={confirmPassword}
+                                onChange={(value: string) => setConfirmPassword(value)}
+                                placeholder="Confirm your password"
+                                className="w-full"
+                                isRequired
+                            />
+
+                            {/* Create Account Button */}
+                            <Button
+                                type="submit"
+                                isLoading={isSubmitting}
+                                isDisabled={isSubmitting}
+                                className="mt-4 flex h-[48px] items-center justify-center gap-[10px] rounded-[12px] px-[16px] py-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] sm:h-[52px]"
+                                style={{
+                                    backgroundImage: "linear-gradient(90deg, rgb(255, 155, 0) 0%, rgb(255, 155, 0) 100%)",
+                                }}
                             >
-                                I already have an account
-                            </button>
-                        </div>
-                    </form>
-                </div>
+                                <span className="text-lg leading-[normal] font-bold whitespace-pre text-white not-italic sm:text-[20px]">
+                                    {isSubmitting ? "Creating Account..." : "Create my account"}
+                                </span>
+                            </Button>
 
-                <Footer className="relative box-border flex w-full shrink-0 flex-col content-stretch items-start justify-between px-[8px] py-[6px]" />
+                            {/* Already Have Account Link */}
+                            <div className="text-center">
+                                <button
+                                    type="button"
+                                    onClick={handleAlreadyHaveAccount}
+                                    className="text-sm leading-[normal] font-medium text-[#1c78bf] not-italic hover:underline sm:text-[16px]"
+                                >
+                                    I already have an account
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <Footer className="relative box-border flex w-full shrink-0 flex-col content-stretch items-start justify-between px-[8px] py-[6px]" />
+                </div>
             </div>
-        </div>
+        </>
     );
 }
