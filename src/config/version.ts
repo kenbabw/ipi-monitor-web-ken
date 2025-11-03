@@ -7,6 +7,7 @@
  * - Y = Minor version (bug fixes, small features)
  * 
  * Version History:
+ * - 2.1 (2025-11-03): Replaced alert popup with branded success message on login page after account creation
  * - 2.0 (2025-10-17): Removed lock icon and reduced spacing on change-password page to ensure footer visibility
  * - 1.9 (2025-10-17): Fixed logout hanging issue by removing user state check and simplifying logout logic
  * - 1.8 (2025-10-17): Restored full password requirement text with natural line wrapping on change-password page
@@ -19,4 +20,4 @@
  * - 1.1 (2025-10-17): Applied responsive design to all pages for mobile/tablet/desktop support
  * - 1.0 (2025-10-16): Initial release with chart functionality, device info, password reset
  */
-export const APP_VERSION = '2.0';
+export const APP_VERSION = '2.1';
