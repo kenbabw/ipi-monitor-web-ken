@@ -91,10 +91,7 @@ export function CreateAccount() {
                 // Sign out the user so they go to login page
                 await signOut();
                 // Store success message in sessionStorage to survive navigation
-                sessionStorage.setItem(
-                    "accountCreatedMessage",
-                    "Account created successfully! Please check your email to verify your account before logging in.",
-                );
+                sessionStorage.setItem("accountCreatedMessage", "Account created successfully!");
                 // Navigate to login
                 navigate("/login");
             }
