@@ -26,7 +26,8 @@ export function HomeLoginPage() {
         }
     }, [storedMessage]);
 
-    const [isSubmitting, setIsSubmitting] = useState(false); // Redirect if user is already logged in
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [loginHovered, setLoginHovered] = useState(false); // Redirect if user is already logged in
     useEffect(() => {
         if (user) {
             const from = location.state?.from?.pathname || "/device-information";
@@ -83,7 +84,7 @@ export function HomeLoginPage() {
                     </h1>
 
                     {/* Login Form */}
-                    <form onSubmit={handleSubmit} className="flex flex-col items-center gap-6 sm:gap-[32px]">
+                    <form onSubmit={handleSubmit} autoComplete="off" className="flex flex-col items-center gap-6 sm:gap-[32px]">
                         <div className="flex w-full shrink-0 flex-col items-start gap-[8px] sm:w-[272px]" data-name="Login Input Fields" data-node-id="25:11">
                             {/* Success Message */}
                             {successMessage && (
@@ -100,6 +101,7 @@ export function HomeLoginPage() {
                                 value={String(email || "")}
                                 onChange={(value: string) => setEmail(String(value || ""))}
                                 placeholder={isSignUp ? "Enter your email" : "Enter your username or email"}
+                                autoComplete="off"
                                 className="w-full"
                             />
 
@@ -110,6 +112,7 @@ export function HomeLoginPage() {
                                 value={String(password || "")}
                                 onChange={(value: string) => setPassword(String(value || ""))}
                                 placeholder="Enter your password"
+                                autoComplete="new-password"
                                 className="w-full"
                             />
 
@@ -132,9 +135,9 @@ export function HomeLoginPage() {
                             isLoading={isSubmitting}
                             isDisabled={isSubmitting}
                             className="box-border flex h-[48px] items-center justify-center gap-[10px] rounded-[12px] px-[16px] py-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] sm:h-[52px]"
-                            style={{
-                                backgroundImage: "linear-gradient(90deg, rgb(255, 155, 0) 0%, rgb(255, 155, 0) 100%)",
-                            }}
+                            style={{ backgroundImage: `linear-gradient(90deg, ${loginHovered ? "#1c78bf" : "rgb(255, 155, 0)"} 0%, ${loginHovered ? "#1c78bf" : "rgb(255, 155, 0)"} 100%)` }}
+                            onMouseEnter={() => setLoginHovered(true)}
+                            onMouseLeave={() => setLoginHovered(false)}
                             data-name="Login Button"
                             data-node-id="69:22"
                         >

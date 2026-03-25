@@ -127,13 +127,13 @@ export const DeviceInformation = () => {
                                     <p className="text-lg leading-[30px] font-semibold text-[#181d27] sm:text-xl">Welcome back, {userName}</p>
                                 </div>
                                 <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                                    <Button color="secondary" className="px-3 py-2 text-xs font-semibold sm:px-4 sm:text-sm">
+                                    <Button className="px-3 py-2 text-xs font-semibold text-white !bg-[rgb(156,163,175)] sm:px-4 sm:text-sm">
                                         Device Info
                                     </Button>
-                                    <Button color="secondary" onClick={handleCharts} className="px-3 py-2 text-xs font-semibold sm:px-4 sm:text-sm">
+                                    <Button onClick={handleCharts} className="px-3 py-2 text-xs font-semibold text-white !bg-[rgb(255,155,0)] hover:!bg-[#1c78bf] sm:px-4 sm:text-sm">
                                         Charts
                                     </Button>
-                                    <Button color="secondary" onClick={handleLogout} className="px-3 py-2 text-xs font-semibold sm:px-4 sm:text-sm">
+                                    <Button onClick={handleLogout} className="px-3 py-2 text-xs font-semibold text-white !bg-[rgb(255,155,0)] hover:!bg-[#1c78bf] sm:px-4 sm:text-sm">
                                         Logout
                                     </Button>
                                 </div>

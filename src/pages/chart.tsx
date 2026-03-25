@@ -273,16 +273,15 @@ const Chart = () => {
                                 </div>
                                 <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                                     <Button
-                                        color="secondary"
                                         onClick={() => navigate("/device-information")}
-                                        className="px-3 py-2 text-sm font-semibold sm:px-4"
+                                        className="px-3 py-2 text-sm font-semibold text-white !bg-[rgb(255,155,0)] hover:!bg-[#1c78bf] sm:px-4"
                                     >
                                         Device Info
                                     </Button>
-                                    <Button color="secondary" className="px-3 py-2 text-sm font-semibold sm:px-4">
+                                    <Button className="px-3 py-2 text-sm font-semibold text-white !bg-[rgb(156,163,175)] sm:px-4">
                                         Charts
                                     </Button>
-                                    <Button color="secondary" onClick={handleLogout} className="px-3 py-2 text-sm font-semibold sm:px-4">
+                                    <Button onClick={handleLogout} className="px-3 py-2 text-sm font-semibold text-white !bg-[rgb(255,155,0)] hover:!bg-[#1c78bf] sm:px-4">
                                         Logout
                                     </Button>
                                 </div>
@@ -426,7 +425,7 @@ const Chart = () => {
                                                                 label={{
                                                                     value: `Avg: ${temperatureStats.average.toFixed(1)}°`,
                                                                     position: "top",
-                                                                    style: { fontWeight: "bold" },
+                                                                    style: { fontWeight: "bold", fill: "#000000" },
                                                                 }}
                                                             />
                                                             <ReferenceLine
@@ -437,7 +436,7 @@ const Chart = () => {
                                                                 label={{
                                                                     value: `High: ${temperatureStats.high.toFixed(1)}°`,
                                                                     position: "top",
-                                                                    style: { fontWeight: "bold" },
+                                                                    style: { fontWeight: "bold", fill: "#000000" },
                                                                 }}
                                                             />
                                                             <ReferenceLine
@@ -448,7 +447,7 @@ const Chart = () => {
                                                                 label={{
                                                                     value: `Low: ${temperatureStats.low.toFixed(1)}°`,
                                                                     position: "bottom",
-                                                                    style: { fontWeight: "bold" },
+                                                                    style: { fontWeight: "bold", fill: "#000000" },
                                                                 }}
                                                             />
                                                         </>
@@ -519,7 +518,7 @@ const Chart = () => {
                                                                 label={{
                                                                     value: `Avg: ${humidityStats.average.toFixed(1)}%`,
                                                                     position: "top",
-                                                                    style: { fontWeight: "bold" },
+                                                                    style: { fontWeight: "bold", fill: "#000000" },
                                                                 }}
                                                             />
                                                             <ReferenceLine
@@ -530,7 +529,7 @@ const Chart = () => {
                                                                 label={{
                                                                     value: `High: ${humidityStats.high.toFixed(1)}%`,
                                                                     position: "top",
-                                                                    style: { fontWeight: "bold" },
+                                                                    style: { fontWeight: "bold", fill: "#000000" },
                                                                 }}
                                                             />
                                                             <ReferenceLine
@@ -541,7 +540,7 @@ const Chart = () => {
                                                                 label={{
                                                                     value: `Low: ${humidityStats.low.toFixed(1)}%`,
                                                                     position: "bottom",
-                                                                    style: { fontWeight: "bold" },
+                                                                    style: { fontWeight: "bold", fill: "#000000" },
                                                                 }}
                                                             />
                                                         </>
@@ -612,7 +611,7 @@ const Chart = () => {
                                                                 label={{
                                                                     value: `Avg: ${dewPointStats.average.toFixed(1)}°`,
                                                                     position: "top",
-                                                                    style: { fontWeight: "bold" },
+                                                                    style: { fontWeight: "bold", fill: "#000000" },
                                                                 }}
                                                             />
                                                             <ReferenceLine
@@ -623,7 +622,7 @@ const Chart = () => {
                                                                 label={{
                                                                     value: `High: ${dewPointStats.high.toFixed(1)}°`,
                                                                     position: "top",
-                                                                    style: { fontWeight: "bold" },
+                                                                    style: { fontWeight: "bold", fill: "#000000" },
                                                                 }}
                                                             />
                                                             <ReferenceLine
@@ -634,7 +633,7 @@ const Chart = () => {
                                                                 label={{
                                                                     value: `Low: ${dewPointStats.low.toFixed(1)}°`,
                                                                     position: "bottom",
-                                                                    style: { fontWeight: "bold" },
+                                                                    style: { fontWeight: "bold", fill: "#000000" },
                                                                 }}
                                                             />
                                                         </>
