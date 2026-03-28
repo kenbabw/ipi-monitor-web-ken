@@ -10,6 +10,7 @@ export function Logout() {
     const { signOut } = useSupabase();
     const [isLoggingOut, setIsLoggingOut] = useState(true);
     const [logoutAttempted, setLogoutAttempted] = useState(false);
+    const [loginHovered, setLoginHovered] = useState(false);
 
     // Ensure user is signed out when this page loads
     useEffect(() => {
@@ -60,9 +61,9 @@ export function Logout() {
                     <Button
                         onClick={handleLoginClick}
                         className="box-border flex h-[48px] items-center justify-center gap-[10px] rounded-[12px] px-[16px] py-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] sm:h-[52px]"
-                        style={{
-                            backgroundImage: "linear-gradient(90deg, rgb(255, 155, 0) 0%, rgb(255, 155, 0) 100%)",
-                        }}
+                        style={{ backgroundImage: `linear-gradient(90deg, ${loginHovered ? "#1c78bf" : "rgb(255, 155, 0)"} 0%, ${loginHovered ? "#1c78bf" : "rgb(255, 155, 0)"} 100%)` }}
+                        onMouseEnter={() => setLoginHovered(true)}
+                        onMouseLeave={() => setLoginHovered(false)}
                     >
                         <span className="text-lg leading-[normal] font-bold whitespace-pre text-white not-italic sm:text-[20px]">Login</span>
                     </Button>
