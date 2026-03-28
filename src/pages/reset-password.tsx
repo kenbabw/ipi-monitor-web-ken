@@ -13,6 +13,7 @@ export function ResetPassword() {
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [resetHovered, setResetHovered] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -88,9 +89,9 @@ export function ResetPassword() {
                                 isLoading={isSubmitting}
                                 isDisabled={isSubmitting}
                                 className="box-border flex h-[48px] w-full items-center justify-center gap-[10px] rounded-[12px] px-[16px] py-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] sm:h-[52px]"
-                                style={{
-                                    backgroundImage: "linear-gradient(90deg, rgb(255, 155, 0) 0%, rgb(255, 155, 0) 100%)",
-                                }}
+                                style={{ backgroundImage: `linear-gradient(90deg, ${resetHovered ? "#1c78bf" : "rgb(255, 155, 0)"} 0%, ${resetHovered ? "#1c78bf" : "rgb(255, 155, 0)"} 100%)` }}
+                                onMouseEnter={() => setResetHovered(true)}
+                                onMouseLeave={() => setResetHovered(false)}
                             >
                                 <span className="text-lg leading-[normal] font-bold whitespace-pre text-white not-italic sm:text-[20px]">
                                     {isSubmitting ? "Sending..." : "Reset password"}
