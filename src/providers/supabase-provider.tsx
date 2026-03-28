@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { AuthError, Session, User } from "@supabase/supabase-js";
-import { supabase } from "@/lib/supabase";
+import { supabase, supabaseUntyped } from "@/lib/supabase";
 
 interface SupabaseContextType {
     user: User | null;
@@ -99,7 +99,14 @@ export function SupabaseProvider({ children }: SupabaseProviderProps) {
     };
 
     const signOut = async () => {
+        await supabaseUntyped.auth.signOut();
         const { error } = await supabase.auth.signOut();
+        // Manually clear all Supabase session keys from localStorage
+        Object.keys(localStorage)
+            .filter((key) => key.startsWith("sb-"))
+            .forEach((key) => localStorage.removeItem(key));
+        setUser(null);
+        setSession(null);
         return { error };
     };
 

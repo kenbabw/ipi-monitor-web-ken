@@ -29,11 +29,11 @@ export function HomeLoginPage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [loginHovered, setLoginHovered] = useState(false); // Redirect if user is already logged in
     useEffect(() => {
-        if (user) {
+        if (!loading && user) {
             const from = location.state?.from?.pathname || "/device-information";
             navigate(from, { replace: true });
         }
-    }, [user, navigate, location]);
+    }, [user, loading, navigate, location]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
