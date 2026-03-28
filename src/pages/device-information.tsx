@@ -117,10 +117,10 @@ export const DeviceInformation = () => {
                 <Header className="relative box-border flex w-full shrink-0 flex-col content-stretch items-start justify-between bg-white px-[8px] py-[8px]" />
 
                 {/* Main Content */}
-                <div className="flex w-full flex-1 flex-col px-4 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-8">
+                <div className="flex w-full flex-col px-4 pt-2 pb-2 sm:px-6 sm:pt-2 sm:pb-2 lg:px-8 lg:pt-2 lg:pb-2">
                     {/* Page header section */}
                     <div className="w-full">
-                        <div className="mb-4 sm:mb-6">
+                        <div className="mb-2 sm:mb-3">
                             {/* Welcome and action buttons */}
                             <div className="flex w-full flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-start sm:justify-between">
                                 <div className="flex flex-col items-start">
@@ -274,6 +274,7 @@ export const DeviceInformation = () => {
                     </div>
                 )}
 
+                <div className="flex-1" />
                 <Footer className="relative box-border flex w-full shrink-0 flex-col content-stretch items-start justify-between px-[8px] py-[6px]" />
             </div>
         </div>

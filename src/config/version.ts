@@ -7,6 +7,7 @@
  * - Y = Minor version (bug fixes, small features)
  * 
  * Version History:
+ * - 2.3 (2026-03-28): Moved device detail fields up on the page and verified the LinkedIn href code
  * - 2.2 (2026-03-24): Updated based on feedback from Dana
  * - 2.1 (2025-11-03): Replaced alert popup with branded success message on login page after account creation
  * - 2.0 (2025-10-17): Removed lock icon and reduced spacing on change-password page to ensure footer visibility
@@ -21,4 +22,4 @@
  * - 1.1 (2025-10-17): Applied responsive design to all pages for mobile/tablet/desktop support
  * - 1.0 (2025-10-16): Initial release with chart functionality, device info, password reset
  */
-export const APP_VERSION = '2.2';
+export const APP_VERSION = '2.3';
