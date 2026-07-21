@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router";
 import { ProtectedRoute } from "@/components/auth/protected-route";
+import { About } from "@/pages/about";
 import { ChangePassword } from "@/pages/change-password";
 import Chart from "@/pages/chart";
 import { CreateAccount } from "@/pages/create-account";
@@ -50,6 +51,14 @@ createRoot(document.getElementById("root")!).render(
                                 element={
                                     <ProtectedRoute>
                                         <Chart />
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/about"
+                                element={
+                                    <ProtectedRoute>
+                                        <About />
                                     </ProtectedRoute>
                                 }
                             />

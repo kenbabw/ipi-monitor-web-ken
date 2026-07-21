@@ -274,14 +274,21 @@ const Chart = () => {
                                 <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                                     <Button
                                         onClick={() => navigate("/device-information")}
-                                        className="px-3 py-2 text-sm font-semibold text-white !bg-[rgb(255,155,0)] hover:!bg-[#1c78bf] sm:px-4"
+                                        className="!bg-[rgb(255,155,0)] px-3 py-2 text-sm font-semibold text-white hover:!bg-[#1c78bf] sm:px-4"
                                     >
                                         Device Info
                                     </Button>
-                                    <Button className="px-3 py-2 text-sm font-semibold text-white !bg-[rgb(156,163,175)] sm:px-4">
-                                        Charts
+                                    <Button className="!bg-[rgb(156,163,175)] px-3 py-2 text-sm font-semibold text-white sm:px-4">Charts</Button>
+                                    <Button
+                                        onClick={() => navigate("/about")}
+                                        className="!bg-[rgb(255,155,0)] px-3 py-2 text-sm font-semibold text-white hover:!bg-[#1c78bf] sm:px-4"
+                                    >
+                                        About
                                     </Button>
-                                    <Button onClick={handleLogout} className="px-3 py-2 text-sm font-semibold text-white !bg-[rgb(255,155,0)] hover:!bg-[#1c78bf] sm:px-4">
+                                    <Button
+                                        onClick={handleLogout}
+                                        className="!bg-[rgb(255,155,0)] px-3 py-2 text-sm font-semibold text-white hover:!bg-[#1c78bf] sm:px-4"
+                                    >
                                         Logout
                                     </Button>
                                 </div>
