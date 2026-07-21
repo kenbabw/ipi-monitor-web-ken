@@ -9,6 +9,7 @@ import { DeviceInformation } from "@/pages/device-information";
 import { HomeLoginPage } from "@/pages/home-login-page";
 import { Logout } from "@/pages/logout";
 import { NotFound } from "@/pages/not-found";
+import { OpeningPage } from "@/pages/opening-page";
 import { ResetPassword } from "@/pages/reset-password";
 import { RouteProvider } from "@/providers/router-provider";
 import { SupabaseProvider } from "@/providers/supabase-provider";
@@ -22,7 +23,7 @@ createRoot(document.getElementById("root")!).render(
                 <BrowserRouter>
                     <RouteProvider>
                         <Routes>
-                            <Route path="/" element={<HomeLoginPage />} />
+                            <Route path="/" element={<OpeningPage />} />
                             <Route path="/login" element={<HomeLoginPage />} />
                             <Route path="/logout" element={<Logout />} />
                             <Route path="/reset-password" element={<ResetPassword />} />
