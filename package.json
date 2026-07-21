@@ -1,6 +1,6 @@
 {
     "name": "untitledui-vite-starter-kit",
-    "version": "0.0.0",
+    "version": "2.6.0",
     "type": "module",
     "private": true,
     "scripts": {
