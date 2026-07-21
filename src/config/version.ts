@@ -25,4 +25,4 @@
  * - 1.1 (2025-10-17): Applied responsive design to all pages for mobile/tablet/desktop support
  * - 1.0 (2025-10-16): Initial release with chart functionality, device info, password reset
  */
-export const APP_VERSION = '2.5';
+export const APP_VERSION = '2.6';
