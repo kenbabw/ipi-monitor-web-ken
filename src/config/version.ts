@@ -7,6 +7,7 @@
  * - Y = Minor version (bug fixes, small features)
  * 
  * Version History:
+ * - 2.6 (2026-07-20): Added architecture opening page
  * - 2.5 (2026-03-28): Updated button hover colors
  * - 2.4 (2026-03-28): Fixed issue with credentials not getting cleared after logout
  * - 2.3 (2026-03-28): Moved device detail fields up on the page and verified the LinkedIn href code
