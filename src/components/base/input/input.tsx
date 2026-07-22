@@ -1,4 +1,4 @@
-import { type ComponentType, type HTMLAttributes, type ReactNode, type Ref, createContext, useContext } from "react";
+import { type ComponentType, type HTMLAttributes, type ReactNode, type Ref, createContext, useContext, useState } from "react";
 import { HelpCircle, InfoCircle } from "@untitledui/icons";
 import type { InputProps as AriaInputProps, TextFieldProps as AriaTextFieldProps } from "react-aria-components";
 import { Group as AriaGroup, Input as AriaInput, TextField as AriaTextField } from "react-aria-components";
@@ -51,12 +51,13 @@ export const InputBase = ({
     isRequired: _isRequired,
     ...inputProps
 }: Omit<InputBaseProps, "label" | "hint">) => {
-    // Check if the input has a leading icon or tooltip
-    const hasTrailingIcon = tooltip || isInvalid;
-    const hasLeadingIcon = Icon;
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-    // If the input is inside a `TextFieldContext`, use its context to simplify applying styles
+    // Check if the input has a leading icon or tooltip
     const context = useContext(TextFieldContext);
+    const isPasswordInput = context?.type === "password";
+    const hasTrailingIcon = tooltip || isInvalid || isPasswordInput;
+    const hasLeadingIcon = Icon;
 
     const inputSize = context?.size || size;
 
@@ -65,12 +66,14 @@ export const InputBase = ({
             root: cx("px-3 py-2", hasTrailingIcon && "pr-9", hasLeadingIcon && "pl-10"),
             iconLeading: "left-3",
             iconTrailing: "right-3",
+            iconTrailingOffset: "right-9",
             shortcut: "pr-2.5",
         },
         md: {
             root: cx("px-3.5 py-2.5", hasTrailingIcon && "pr-9.5", hasLeadingIcon && "pl-10.5"),
             iconLeading: "left-3.5",
             iconTrailing: "right-3.5",
+            iconTrailingOffset: "right-9.5",
             shortcut: "pr-3",
         },
     });
@@ -119,6 +122,7 @@ export const InputBase = ({
             <AriaInput
                 {...(inputProps as AriaInputProps)}
                 ref={ref}
+                type={isPasswordInput ? (isPasswordVisible ? "text" : "password") : undefined}
                 placeholder={placeholder}
                 className={cx(
                     "m-0 w-full bg-transparent text-md text-primary ring-0 outline-hidden placeholder:text-placeholder autofill:rounded-lg autofill:text-primary",
@@ -135,7 +139,7 @@ export const InputBase = ({
                     <TooltipTrigger
                         className={cx(
                             "absolute cursor-pointer text-fg-quaternary transition duration-200 hover:text-fg-quaternary_hover focus:text-fg-quaternary_hover",
-                            sizes[inputSize].iconTrailing,
+                            isPasswordInput ? sizes[inputSize].iconTrailingOffset : sizes[inputSize].iconTrailing,
                             context?.tooltipClassName,
                             tooltipClassName,
                         )}
@@ -150,11 +154,43 @@ export const InputBase = ({
                 <InfoCircle
                     className={cx(
                         "pointer-events-none absolute size-4 text-fg-error-secondary",
-                        sizes[inputSize].iconTrailing,
+                        isPasswordInput ? sizes[inputSize].iconTrailingOffset : sizes[inputSize].iconTrailing,
                         context?.tooltipClassName,
                         tooltipClassName,
                     )}
                 />
+            )}
+
+            {isPasswordInput && (
+                <button
+                    type="button"
+                    className={cx(
+                        "absolute cursor-pointer text-fg-quaternary transition duration-200 hover:text-fg-quaternary_hover focus:text-fg-quaternary_hover",
+                        sizes[inputSize].iconTrailing,
+                    )}
+                    onMouseDown={(event) => event.preventDefault()}
+                    onClick={() => setIsPasswordVisible((previous) => !previous)}
+                    aria-label={isPasswordVisible ? "Hide password" : "Show password"}
+                    aria-pressed={isPasswordVisible}
+                >
+                    <svg className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                        {isPasswordVisible ? (
+                            <>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+                                <circle cx="12" cy="12" r="3" />
+                            </>
+                        ) : (
+                            <>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 3l18 18" />
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M10.58 10.58a2 2 0 0 0 2.84 2.84M9.36 5.37A9.77 9.77 0 0 1 12 5c6.5 0 10 7 10 7a18.4 18.4 0 0 1-3.64 4.83M6.23 6.23C3.75 7.88 2 12 2 12a18.6 18.6 0 0 0 6.77 6.77"
+                                />
+                            </>
+                        )}
+                    </svg>
+                </button>
             )}
 
             {/* Shortcut */}

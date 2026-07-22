@@ -7,6 +7,7 @@
  * - Y = Minor version (bug fixes, small features)
  * 
  * Version History:
+ * - 2.8 (2026-07-21): Added show/hide eye toggles to password fields across authentication pages
  * - 2.7 (2026-07-20): Added About page with in-app privacy policy and updated navigation buttons
  * - 2.6 (2026-07-20): Added architecture opening page
  * - 2.5 (2026-03-28): Updated button hover colors
@@ -26,4 +27,4 @@
  * - 1.1 (2025-10-17): Applied responsive design to all pages for mobile/tablet/desktop support
  * - 1.0 (2025-10-16): Initial release with chart functionality, device info, password reset
  */
-export const APP_VERSION = '2.7';
+export const APP_VERSION = '2.8';

@@ -6,6 +6,7 @@ export function AuthExample() {
     const { user, signIn, signUp, signOut, loading } = useSupabase();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [isSignUp, setIsSignUp] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -72,14 +73,42 @@ export function AuthExample() {
                     <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                         Password
                     </label>
-                    <input
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
-                    />
+                    <div className="relative mt-1">
+                        <input
+                            type={isPasswordVisible ? "text" : "password"}
+                            id="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                            className="block w-full rounded-md border border-gray-300 px-3 py-2 pr-10 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none"
+                        />
+                        <button
+                            type="button"
+                            className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 transition-colors hover:text-gray-700"
+                            onMouseDown={(event) => event.preventDefault()}
+                            onClick={() => setIsPasswordVisible((previous) => !previous)}
+                            aria-label={isPasswordVisible ? "Hide password" : "Show password"}
+                            aria-pressed={isPasswordVisible}
+                        >
+                            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                                {isPasswordVisible ? (
+                                    <>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+                                        <circle cx="12" cy="12" r="3" />
+                                    </>
+                                ) : (
+                                    <>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 3l18 18" />
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M10.58 10.58a2 2 0 0 0 2.84 2.84M9.36 5.37A9.77 9.77 0 0 1 12 5c6.5 0 10 7 10 7a18.4 18.4 0 0 1-3.64 4.83M6.23 6.23C3.75 7.88 2 12 2 12a18.6 18.6 0 0 0 6.77 6.77"
+                                        />
+                                    </>
+                                )}
+                            </svg>
+                        </button>
+                    </div>
                 </div>
 
                 <Button type="submit" className="w-full">
